@@ -1,6 +1,7 @@
 import * as express from "express";
 
 import expressApp from "./expressApp";
+import dbConnection from "./database/connection";
 const PORT = 5000;
 
 const startServer = async () => {
@@ -8,8 +9,9 @@ const startServer = async () => {
 
   // - Express Code
   expressApp(app);
-  
+
   // - DB connection
+  dbConnection();
 
   // - Listening
   app
