@@ -9,9 +9,10 @@ export default {
     database: "",
     collections: {
       USERS: "users",
+      ADDRESSES: "addresses",
     },
   },
-  
+
   //
   PORT: process.env.PORT,
   SERVER_URL: process.env.BACKEND_URL,
