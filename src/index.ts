@@ -1,11 +1,14 @@
 import * as express from "express";
 
+import expressApp from "./expressApp";
 const PORT = 5000;
 
 const startServer = async () => {
   const app: express.Application = express();
 
   // - Express Code
+  expressApp(app);
+  
   // - DB connection
 
   // - Listening
