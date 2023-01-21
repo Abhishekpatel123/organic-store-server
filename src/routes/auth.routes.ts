@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as authController from "../controllers/authController";
+import * as authController from "../controllers/auth.controller";
 import { authenticate } from "../middleware";
 import * as authValidation from "../validations/auth.validation";
 

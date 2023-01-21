@@ -11,6 +11,7 @@ export default {
       USERS: "users",
       ADDRESSES: "addresses",
       CATEGORIES: "categories",
+      PRODUCTS: "products",
     },
   },
   // - Mail
