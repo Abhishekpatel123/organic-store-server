@@ -1,7 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 import config from "../../config";
 
-interface AddressInterface extends Document {
+export interface AddressInterface extends Document {
   name: string;
   phone: string;
   pinCode: number;

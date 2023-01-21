@@ -1,4 +1,5 @@
 import * as express from "express";
+import { userRoutes } from "./routes";
 
 export default (app: express.Application) => {
   // - Middleware
@@ -6,6 +7,7 @@ export default (app: express.Application) => {
   app.use(express.urlencoded({ extended: true }));
 
   // - Routings
+  app.use("/api/v1/users", userRoutes);
   app.get("/", (req, res) => res.send("app is working"));
 
   // - Error handling

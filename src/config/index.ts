@@ -12,9 +12,15 @@ export default {
       ADDRESSES: "addresses",
     },
   },
-
+  // - Mail
+  nodemailerConfig: {
+    EMAIL: process.env.EMAIL_USERNAME,
+    PASSWORD: process.env.EMAIL_PASSWORD,
+  },
   //
   PORT: process.env.PORT,
   SERVER_URL: process.env.BACKEND_URL,
   CLIENT_URL: process.env.CLIENT_URL,
+  JWT_SECRET:
+    process.env.JWT_SECRET || "sdfsflsdfjslkfjsldfjslfsjflsffjfdffdjkb",
 };

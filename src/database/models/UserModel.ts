@@ -5,7 +5,7 @@ interface TokenInterface {
   token: string;
 }
 
-interface UserInterface extends Document {
+export interface UserInterface extends Document {
   _id: Types.ObjectId;
   name: string;
   email: string;
@@ -28,6 +28,9 @@ const userSchema = new Schema<UserInterface>({
   tokens: [{ token: String }],
 });
 
-const UserModel = model(config.mongoConfig.collections.USERS, userSchema);
+const UserModel = model<UserInterface>(
+  config.mongoConfig.collections.USERS,
+  userSchema
+);
 
-export default = UserModel;
+export default UserModel;
