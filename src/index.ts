@@ -1,8 +1,20 @@
 import * as express from "express";
 
-const app: express.Application = express();
+const PORT = 5000;
 
-const Port = 5000;
-app.listen(Port, () => {
-  console.log("listening on Port", Port);
-});
+const startServer = async () => {
+  const app: express.Application = express();
+
+  // - Express Code
+  // - DB connection
+
+  // - Listening
+  app
+    .listen(PORT, () => console.log(`Listening on port ${PORT}`))
+    .on("error", (err) => {
+      console.log(err);
+      process.exit();
+    });
+};
+
+startServer();
