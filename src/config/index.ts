@@ -10,6 +10,7 @@ export default {
     collections: {
       USERS: "users",
       ADDRESSES: "addresses",
+      CATEGORIES: "categories",
     },
   },
   // - Mail
