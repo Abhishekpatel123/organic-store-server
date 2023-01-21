@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
-
-const MONGO_URL =
-  "mongodb+srv://adventure-app:adventure@cluster0.rojcz.mongodb.net/organic-store?retryWrites=true&w=majority";
+import config from "../config";
 
 mongoose.set("strictQuery", false);
 
 const dbConnection = () =>
   mongoose
-    .connect(MONGO_URL)
+    .connect(config.mongoConfig.connectionUrl || "")
     .then(() => console.log("DB connected"))
     .catch((err) => console.log(err));
 
