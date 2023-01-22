@@ -17,7 +17,7 @@ export const otpVerify = async (req: Request, res: Response) => {
 export const addAddress = async (req: Request, res: Response) => {
   const address = await AddressModel.create(req.body);
   if (req.user) {
-    req.user.addresses.push(address._id);
+    req.user.addresses.push({ address: address._id, isShippingAddress: false });
     await req.user.save();
     return res
       .status(200)
@@ -57,7 +57,7 @@ export const deleteAddress = async (req: Request, res: Response) => {
     //  2nd way
     await UserModel.updateOne(
       { _id: req.user._id },
-      { $pull: { addresses: id } }
+      { $pull: { 'addresses.address': id } }
     );
     return res.status(200).send({
       message: "Successfully Removed Address",

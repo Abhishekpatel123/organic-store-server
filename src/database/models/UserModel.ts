@@ -12,7 +12,10 @@ export interface UserInterface extends Document {
   phone: string;
   otp: string;
   verify: boolean;
-  addresses: Types.Array<Types.ObjectId>;
+  addresses: Types.Array<{
+    address: Types.ObjectId;
+    isShippingAddress: boolean;
+  }>;
   tokens: Types.Array<TokenInterface>;
 }
 
@@ -23,7 +26,13 @@ const userSchema = new Schema<UserInterface>({
   otp: String,
   verify: { type: Boolean, default: false },
   addresses: [
-    { type: Types.ObjectId, ref: config.mongoConfig.collections.ADDRESSES },
+    {
+      address: {
+        type: Types.ObjectId,
+        ref: config.mongoConfig.collections.ADDRESSES,
+      },
+      isShippingAddress: { type: Boolean, default: false },
+    },
   ],
   tokens: [{ token: String }],
 });
