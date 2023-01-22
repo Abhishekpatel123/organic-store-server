@@ -13,10 +13,7 @@ const productCommonSchema = Joi.object({
     currency: Joi.string().required(),
     discount: Joi.number().required(),
   }).required(),
-  images: Joi.object({
-    imageUrl: Joi.string().required(),
-    color: Joi.string().required(),
-  }),
+  imageUrl: Joi.string(),
   quantity: Joi.number().required(),
   category: Joi.string().required(),
 });
