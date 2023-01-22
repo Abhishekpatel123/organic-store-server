@@ -6,8 +6,8 @@ import * as utils from "../utils";
 declare global {
   namespace Express {
     interface Request {
-      user?: UserInterface;
-      token?: string;
+      user: UserInterface;
+      token: string;
     }
   }
 }
