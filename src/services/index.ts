@@ -1,5 +1,2 @@
-export { default as otpGenerator } from "./otpGenerateService";
-export { default as sendMail } from "./sendMailService";
-export { default as generateToken } from "./generateTokenService";
-export { default as verifyToken } from "./verifyTokenService";
-export { default as uploadFile } from "./uploadFileService";
+export { default as authService } from "./auth.service";
+export { default as categoryService } from "./category.service";

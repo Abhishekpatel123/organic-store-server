@@ -1,4 +1,5 @@
 import * as express from "express";
+import { errorHandler } from "./middleware";
 import { categoryRoutes, userRoutes } from "./routes";
 
 export default (app: express.Application) => {
@@ -12,4 +13,5 @@ export default (app: express.Application) => {
   app.get("/", (req, res) => res.send("app is working"));
 
   // - Error handling
+  app.use(errorHandler);
 };

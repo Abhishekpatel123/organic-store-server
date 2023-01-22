@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserModel } from "../database/models";
 import { UserInterface } from "../database/models/UserModel";
-import { verifyToken } from "../services";
+import * as utils from "../utils";
 
 declare global {
   namespace Express {
@@ -23,7 +23,7 @@ const authenticate = async (
       .status(401)
       .send({ message: "Your request does not contain Bearer token" });
   try {
-    const decoded: any = await verifyToken(token);
+    const decoded: any = await utils.verifyToken(token);
     const user = await UserModel.findOne({ email: decoded.email });
     if (!user)
       return res

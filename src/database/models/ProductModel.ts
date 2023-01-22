@@ -21,6 +21,8 @@ export interface ProductInterface extends Document {
   manufacture_details: any;
   pricing: PricingInterface;
   images: Types.Array<ImageInterface>;
+  quantity: number;
+  category: string;
 }
 
 const productSchema = new Schema<ProductInterface>({
@@ -36,6 +38,8 @@ const productSchema = new Schema<ProductInterface>({
     discount: Number,
   },
   images: [{ imageUrl: String, color: String }],
+  quantity: { type: Number, required: true },
+  category: { type: String, required: true },
   // rating comment will include latter
   // offer will include later version
 });

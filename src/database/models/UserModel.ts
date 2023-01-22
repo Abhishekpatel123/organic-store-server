@@ -9,7 +9,7 @@ export interface UserInterface extends Document {
   _id: Types.ObjectId;
   name: string;
   email: string;
-  phone: {};
+  phone: string;
   otp: string;
   verify: boolean;
   addresses: Types.Array<Types.ObjectId>;
