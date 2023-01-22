@@ -12,6 +12,8 @@ declare global {
   }
 }
 
+// - Admin Authorization will do later
+// - Role (ADMIN, USER)
 const authenticate = async (
   req: Request,
   res: Response,
@@ -24,7 +26,10 @@ const authenticate = async (
       .send({ message: "Your request does not contain Bearer token" });
   try {
     const decoded: any = await utils.verifyToken(token);
-    const user = await UserModel.findOne({ email: decoded.email });
+    const user = await UserModel.findOne({
+      email: decoded.email,
+      "tokens.token": token,
+    });
     if (!user)
       return res
         .status(404)
