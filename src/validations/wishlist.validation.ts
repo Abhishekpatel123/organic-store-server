@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as Joi from "joi";
 
 // - add Item Into Cart
-export const addItemIntoCart = (
+export const addItemIntoWishlist = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -10,7 +10,6 @@ export const addItemIntoCart = (
   const data = req.body;
   const schema = Joi.object({
     itemId: Joi.string().required(),
-    quantity: Joi.number().required(),
   });
 
   const { error } = schema.validate(data);
@@ -20,7 +19,7 @@ export const addItemIntoCart = (
 };
 
 // - remove cart item
-export const removeCartItem = (
+export const removeWishlistItem = (
   req: Request,
   res: Response,
   next: NextFunction

@@ -41,7 +41,7 @@ export const addItemIntoCart = async (
   }
   // - If item already not exist
   cart.items.push({
-    itemId: product.id,
+    itemId: product._id,
     quantity,
     basePrice: product.pricing.basePrice,
   });
