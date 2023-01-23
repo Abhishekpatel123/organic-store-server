@@ -11,7 +11,7 @@ export interface ORDERInterface extends Document {
   userId: string;
   paymentStatus: string;
   status: string;
-  pricing: {
+  billing: {
     price: number;
     currency: string;
   };
@@ -34,7 +34,7 @@ const orderSchema = new Schema<ORDERInterface>({
   userId: { type: String, unique: true, required: true },
   paymentStatus: { type: String, required: true },
   status: { type: String, required: true },
-  pricing: {
+  billing: {
     price: { type: Number, required: true },
     currency: { type: String, required: true },
   },
@@ -52,7 +52,7 @@ const orderSchema = new Schema<ORDERInterface>({
       discount: Number,
     },
     imageUrl: String,
-    quantity: { type: Number, required: true },
+    countInStock: { type: Number, required: true },
   },
   shippingAddress: {
     name: { type: String, required: true },
