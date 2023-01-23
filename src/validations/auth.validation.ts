@@ -65,7 +65,7 @@ export const updateAddress = (
   const data = req.body;
 
   const schema = Joi.object({
-    id: Joi.string().required(),
+    addressId: Joi.string().required(),
     name: Joi.string().required(),
     phone: Joi.string().required(),
     pinCode: Joi.number().required(),
@@ -93,7 +93,25 @@ export const removeAddress = (
   const data = req.body;
 
   const schema = Joi.object({
-    id: Joi.string().required(),
+    addressId: Joi.string().required(),
+  });
+
+  const { error } = schema.validate(data);
+  if (error) return res.status(404).send(error.message);
+  console.log("- Validation Done");
+  next();
+};
+
+// making this address to shipping address
+export const makeShippingAddress = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const data = req.params;
+
+  const schema = Joi.object({
+    addressId: Joi.string().required(),
   });
 
   const { error } = schema.validate(data);

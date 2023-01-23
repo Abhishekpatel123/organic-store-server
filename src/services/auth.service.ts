@@ -1,8 +1,9 @@
+import { Request } from "express";
 import { UserModel } from "../database/models";
-import { UserInterface } from "../database/models/UserModel";
+import { UserInterface, AddressInterface } from "../database/models/UserModel";
 import * as utils from "../utils";
 
-export const otpGenerator = async (email: UserInterface['email']) => {
+export const otpGenerator = async (email: UserInterface["email"]) => {
   const OTP = utils.otpGenerator();
   try {
     // - Send OTP through mail
@@ -25,7 +26,10 @@ export const otpGenerator = async (email: UserInterface['email']) => {
   }
 };
 
-export const otpVerify = async (email: UserInterface['email'], otp: UserInterface['otp']) => {
+export const otpVerify = async (
+  email: UserInterface["email"],
+  otp: UserInterface["otp"]
+) => {
   try {
     const user = await UserModel.findOne({ email });
 
@@ -42,4 +46,31 @@ export const otpVerify = async (email: UserInterface['email'], otp: UserInterfac
   } catch (err: any) {
     throw err;
   }
+};
+
+export const makeShippingAddress = async (
+  req: Request,
+  addressId: AddressInterface["addressId"]
+) => {
+  const previousAddresses = req.user.addresses;
+  let isOneAddressModified = false;
+  const addresses = req.user.addresses.map((address) => {
+    if (address.addressId === addressId) {
+      isOneAddressModified = true;
+      return { ...address, isShippingAddress: true };
+    }
+    return { ...address, isShippingAddress: false };
+  });
+  req.user.set(
+    "addresses",
+    isOneAddressModified ? addresses : previousAddresses
+  );
+  await req.user.save();
+  return {
+    message: "Successfully make this address to shipping address.",
+  };
+  // const address = await UserModel.updateOne(
+  //   { _id: userId, "addresses.address": addressId },
+  //   { $set: { "addresses.$.isShippingAddress": true } }
+  // );
 };

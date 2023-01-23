@@ -37,6 +37,7 @@ const productSchema = new Schema<ProductInterface>({
   category: {
     type: Types.ObjectId,
     ref: config.mongoConfig.collections.CATEGORIES,
+    required: true,
   },
   manufacture_details: Object,
   pricing: {

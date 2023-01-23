@@ -7,14 +7,11 @@ import { Schema, model, Document, Types } from "mongoose";
 import config from "../../config";
 import { ProductInterface } from "./ProductModel";
 
-export interface ORDERInterface extends Document {
+export interface OrderInterface extends Document {
   userId: string;
   paymentStatus: string;
   status: string;
-  billing: {
-    price: number;
-    currency: string;
-  };
+  bill: number;
   items: Types.Array<ProductInterface>;
   shippingAddress: {
     name: string;
@@ -30,30 +27,33 @@ export interface ORDERInterface extends Document {
   };
 }
 
-const orderSchema = new Schema<ORDERInterface>({
-  userId: { type: String, unique: true, required: true },
+const orderSchema = new Schema<OrderInterface>({
+  userId: { type: String, required: true },
   paymentStatus: { type: String, required: true },
   status: { type: String, required: true },
-  billing: {
-    price: { type: Number, required: true },
-    currency: { type: String, required: true },
-  },
-  items: {
-    sku: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    title: { type: String, required: true },
-    description: String,
-    rating: Number,
-    category: { type: String, required: true },
-    manufacture_details: Object,
-    pricing: {
-      basePrice: Number,
-      currency: String,
-      discount: Number,
+  bill: { type: Number, required: true },
+  items: [
+    {
+      sku: { type: String, required: true, unique: true },
+      name: { type: String, required: true },
+      title: { type: String, required: true },
+      description: String,
+      rating: Number,
+      category: {
+        type: Types.ObjectId,
+        ref: config.mongoConfig.collections.CATEGORIES,
+        required: true,
+      },
+      manufacture_details: Object,
+      pricing: {
+        basePrice: Number,
+        currency: String,
+        discount: Number,
+      },
+      imageUrl: String,
+      countInStock: { type: Number, required: true },
     },
-    imageUrl: String,
-    countInStock: { type: Number, required: true },
-  },
+  ],
   shippingAddress: {
     name: { type: String, required: true },
     phone: { type: String, required: true },
@@ -69,7 +69,7 @@ const orderSchema = new Schema<ORDERInterface>({
   },
 });
 
-const OrderModel = model<ORDERInterface>(
+const OrderModel = model<OrderInterface>(
   config.mongoConfig.collections.ORDERS,
   orderSchema
 );

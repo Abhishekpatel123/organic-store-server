@@ -2,21 +2,21 @@ import * as express from "express";
 import * as authController from "../controllers/auth.controller";
 import { authenticate } from "../middleware";
 import { tryCatch } from "../utils";
-import * as authValidation from "../validations/auth.validation";
+import * as validation from "../validations/auth.validation";
 
 const router = express.Router();
 
 // - OTP Generate
 router.post(
   "/otp/generate",
-  authValidation.otpGenerator,
+  validation.otpGenerator,
   tryCatch(authController.otpGenerator)
 );
 
 // - OTP Verify
 router.post(
   "/otp/verify",
-  authValidation.otpVerify,
+  validation.otpVerify,
   tryCatch(authController.otpVerify)
 );
 
@@ -24,9 +24,18 @@ router.post(
 router.post(
   "/addresses",
   authenticate,
-  authValidation.address,
+  validation.address,
   tryCatch(authController.addAddress)
 );
+
+// - Make This Address to Shipping Address
+router.post(
+  "/addresses/shipping/:addressId",
+  authenticate,
+  validation.makeShippingAddress,
+  tryCatch(authController.makeShippingAddress)
+);
+
 
 // - Fetch Address
 router.get("/addresses", authenticate, tryCatch(authController.getAddresses));
@@ -35,7 +44,7 @@ router.get("/addresses", authenticate, tryCatch(authController.getAddresses));
 router.patch(
   "/addresses",
   authenticate,
-  authValidation.updateAddress,
+  validation.updateAddress,
   tryCatch(authController.updateAddress)
 );
 
@@ -43,7 +52,7 @@ router.patch(
 router.delete(
   "/addresses",
   authenticate,
-  authValidation.removeAddress,
+  validation.removeAddress,
   tryCatch(authController.deleteAddress)
 );
 
