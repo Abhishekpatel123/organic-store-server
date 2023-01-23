@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { CategoryModel } from "../database/models";
+import { CategoryInterface } from "../database/models/CategoryModel";
 import ErrorHandler from "../Error";
 
 import * as utils from "../utils";
@@ -8,7 +9,7 @@ export const createCategory = async ({
   name,
   file,
 }: {
-  name: string;
+  name: CategoryInterface["name"];
   file: any;
 }) => {
   if (file) {
@@ -30,7 +31,7 @@ export const fetchCategories = async () => {
   return { categories, message: "Categories fetched successfully." };
 };
 
-export const removeCategory = async (id: string) => {
+export const removeCategory = async (id: CategoryInterface["_id"]) => {
   const category = await CategoryModel.findOne({ _id: id });
   if (!category) throw ErrorHandler.BadRequest("Category not exist.");
 

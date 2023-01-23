@@ -1,10 +1,10 @@
 import { Schema, model, Document, Types } from "mongoose";
 import config from "../../config";
 
-interface ImageInterface {
-  imageUrl: string;
-  color: string;
-}
+// interface ImageInterface {
+//   imageUrl: string;
+//   color: string;
+// }
 
 interface PricingInterface {
   basePrice: number;
@@ -22,7 +22,7 @@ export interface ProductInterface extends Document {
   pricing: PricingInterface;
   imageUrl: string;
   countInStock: number;
-  category: string;
+  category: any;
 }
 
 const productSchema = new Schema<ProductInterface>({
@@ -34,7 +34,10 @@ const productSchema = new Schema<ProductInterface>({
   title: { type: String, required: true },
   description: String,
   rating: Number,
-  category: { type: String, required: true },
+  category: {
+    type: Types.ObjectId,
+    ref: config.mongoConfig.collections.CATEGORIES,
+  },
   manufacture_details: Object,
   pricing: {
     basePrice: Number,

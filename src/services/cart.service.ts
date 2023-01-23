@@ -1,10 +1,12 @@
 import { Types } from "mongoose";
 import { CartModel, ProductModel } from "../database/models";
+import { ProductInterface } from "../database/models/ProductModel";
+import { UserInterface } from "../database/models/UserModel";
 import ErrorHandler from "../Error";
 
 export const addItemIntoCart = async (
-  userId: string | Types.ObjectId,
-  itemId: string,
+  userId: UserInterface['_id'],
+  itemId: ProductInterface['_id'],
   quantity: number
 ) => {
   const cart = await CartModel.findOne({ userId });
@@ -54,14 +56,14 @@ export const addItemIntoCart = async (
   return { cart: savedCart, message: "Successfully Item or Product Added" };
 };
 
-export const fetchCart = async (userId: string | Types.ObjectId) => {
+export const fetchCart = async (userId: UserInterface['_id']) => {
   const cart = await CartModel.findOne({ userId });
   return { cart, message: "Cart fetched successfully." };
 };
 
 export const removeCartItem = async (
-  userId: string | Types.ObjectId,
-  itemId: string
+  userId: UserInterface['_id'],
+  itemId: ProductInterface['_id']
 ) => {
   const cart = await CartModel.findOne({ userId });
   if (!cart)

@@ -15,7 +15,7 @@ export const fetchProducts = async () => {
   return { products, message: "Product fetched successfully." };
 };
 
-export const removeProduct = async (id: string) => {
+export const removeProduct = async (id: ProductInterface['_id']) => {
   const product = await ProductModel.findOne({ _id: id });
   if (!product) throw ErrorHandler.BadRequest("Product not exist.");
 

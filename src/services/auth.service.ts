@@ -1,7 +1,8 @@
 import { UserModel } from "../database/models";
+import { UserInterface } from "../database/models/UserModel";
 import * as utils from "../utils";
 
-export const otpGenerator = async (email: string) => {
+export const otpGenerator = async (email: UserInterface['email']) => {
   const OTP = utils.otpGenerator();
   try {
     // - Send OTP through mail
@@ -24,7 +25,7 @@ export const otpGenerator = async (email: string) => {
   }
 };
 
-export const otpVerify = async (email: string, otp: string) => {
+export const otpVerify = async (email: UserInterface['email'], otp: UserInterface['otp']) => {
   try {
     const user = await UserModel.findOne({ email });
 

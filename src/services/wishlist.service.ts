@@ -1,10 +1,13 @@
 import { Types } from "mongoose";
 import { WishlistModel, ProductModel } from "../database/models";
+import { ProductInterface } from "../database/models/ProductModel";
+import { UserInterface } from "../database/models/UserModel";
 import ErrorHandler from "../Error";
+// string | Types.ObjectId
 
 export const addItemIntoWishlist = async (
-  userId: string | Types.ObjectId,
-  itemId: string
+  userId: UserInterface["_id"],
+  itemId: ProductInterface["_id"]
 ) => {
   const wishlist = await WishlistModel.findOne({ userId });
   const product = await ProductModel.findOne({ _id: itemId });
@@ -41,14 +44,16 @@ export const addItemIntoWishlist = async (
   };
 };
 
-export const fetchWishlist = async (userId: string | Types.ObjectId) => {
-  const wishlist = await WishlistModel.findOne({ userId }).populate("items.itemId");
+export const fetchWishlist = async (userId: UserInterface['_id']) => {
+  const wishlist = await WishlistModel.findOne({ userId }).populate(
+    "items.itemId"
+  );
   return { wishlist, message: "Cart fetched successfully." };
 };
 
 export const removeWishlistItem = async (
-  userId: string | Types.ObjectId,
-  itemId: string
+  userId: UserInterface['_id'],
+  itemId: ProductInterface['_id']
 ) => {
   const wishlist = await WishlistModel.findOne({ userId });
   if (!wishlist)
