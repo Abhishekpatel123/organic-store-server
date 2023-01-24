@@ -5,8 +5,8 @@ import { UserInterface } from "../database/models/UserModel";
 import ErrorHandler from "../Error";
 
 export const addItemIntoCart = async (
-  userId: UserInterface['_id'],
-  itemId: ProductInterface['_id'],
+  userId: UserInterface["_id"],
+  itemId: ProductInterface["_id"],
   quantity: number
 ) => {
   const cart = await CartModel.findOne({ userId });
@@ -27,7 +27,9 @@ export const addItemIntoCart = async (
   }
 
   // - If cart already exist
-  const itemIndex = cart.items.findIndex((item) => item.itemId.toString() === itemId);
+  const itemIndex = cart.items.findIndex(
+    (item) => item.itemId.toString() === itemId
+  );
   // - If product or item already exist
   if (itemIndex > -1) {
     let item = cart.items[itemIndex];
@@ -56,19 +58,21 @@ export const addItemIntoCart = async (
   return { cart: savedCart, message: "Successfully Item or Product Added" };
 };
 
-export const fetchCart = async (userId: UserInterface['_id']) => {
-  const cart = await CartModel.findOne({ userId });
+export const fetchCart = async (userId: UserInterface["_id"]) => {
+  const cart = await CartModel.findOne({ userId }).populate("items.itemId");
   return { cart, message: "Cart fetched successfully." };
 };
 
 export const removeCartItem = async (
-  userId: UserInterface['_id'],
-  itemId: ProductInterface['_id']
+  userId: UserInterface["_id"],
+  itemId: ProductInterface["_id"]
 ) => {
   const cart = await CartModel.findOne({ userId });
   if (!cart)
     throw ErrorHandler.BadRequest("Cart is not found or No item in cart");
-  const itemIndex = cart.items.findIndex((item) => item.itemId.toString() === itemId);
+  const itemIndex = cart.items.findIndex(
+    (item) => item.itemId.toString() === itemId
+  );
   //   if item or product is present
   if (itemIndex > -1) {
     let item = cart.items[itemIndex];

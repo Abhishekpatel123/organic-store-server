@@ -21,7 +21,7 @@ router.delete(
   tryCatch(controllers.removeProduct)
 );
 
-// - Read Product
+// - Read Product bu category
 router.get("/by-category/:categoryId", tryCatch(controllers.fetchProducts));
 
 // - Get single product by Id
