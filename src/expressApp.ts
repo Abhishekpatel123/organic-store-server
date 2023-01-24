@@ -1,6 +1,6 @@
 import * as express from "express";
 import { errorHandler } from "./middleware";
-import { cartRoutes, categoryRoutes, orderRoutes, productRoutes, userRoutes, wishlistRoutes } from "./routes";
+import { cartRoutes, categoryRoutes, orderRoutes, productRoutes, ratingRoutes, userRoutes, wishlistRoutes } from "./routes";
 
 export default (app: express.Application) => {
   // - Middleware
@@ -14,6 +14,7 @@ export default (app: express.Application) => {
   app.use("/api/v1/carts", cartRoutes);
   app.use("/api/v1/wishlists", wishlistRoutes);
   app.use("/api/v1/orders", orderRoutes);
+  app.use("/api/v1/ratings", ratingRoutes);
   app.get("/", (req, res) => res.send("app is working"));
 
   // - Error handling

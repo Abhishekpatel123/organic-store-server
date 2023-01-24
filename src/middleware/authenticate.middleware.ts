@@ -26,6 +26,7 @@ const authenticate = async (
       .send({ message: "Your request does not contain Bearer token" });
   try {
     const decoded: any = await utils.verifyToken(token);
+    console.log(decoded, "decoded");
     const user = await UserModel.findOne({
       email: decoded.email,
       "tokens.token": token,
