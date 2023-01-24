@@ -18,6 +18,17 @@ export const fetchProduct = async (req: Request, res: Response) => {
   res.status(200).json(response);
 };
 
+export const topRatedProduct = async (req: Request, res: Response) => {
+  const response = await services.topRatedProduct({});
+  res.status(200).json(response);
+};
+
+export const latestProduct = async (req: Request, res: Response) => {
+  // const data = { limit: 10 };
+  const response = await services.latestProduct();
+  res.status(200).json(response);
+};
+
 export const removeProduct = async (req: Request, res: Response) => {
   const { id } = req.body;
   const response = await services.removeProduct(id);

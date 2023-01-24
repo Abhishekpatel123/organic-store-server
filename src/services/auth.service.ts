@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { UserModel } from "../database/models";
 import { UserInterface, AddressInterface } from "../database/models/UserModel";
+import ErrorHandler from "../Error";
 import * as utils from "../utils";
 
 export const otpGenerator = async (email: UserInterface["email"]) => {
@@ -28,8 +29,8 @@ export const otpVerify = async (
 ) => {
   const user = await UserModel.findOne({ email });
 
-  if (!user) throw Error(`{ message: "User not found." }`);
-  if (user.otp !== otp) throw Error("Otp is incorrect.");
+  if (!user) throw ErrorHandler.BadRequest(`{ message: "User not found." }`);
+  if (user.otp !== otp) throw ErrorHandler.BadRequest("Otp is incorrect.");
   const token = utils.generateToken({ id: user._id, email: user.email });
 
   // - Add token in DB

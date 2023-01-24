@@ -17,8 +17,21 @@ export const fetchProducts = async (categoryId: string) => {
 };
 
 export const fetchProduct = async (productId: string) => {
-  // Filter by category
   const product = await ProductModel.findOne({ _id: productId });
+  if (!product) throw ErrorHandler.BadRequest("Product not exist");
+  return { product, message: "Product fetched successfully." };
+};
+
+export const topRatedProduct = async ({ limit = 10 }: { limit?: number }) => {
+  const product = await ProductModel.find({})
+    .sort({ avgRating: -1 })
+    .limit(limit);
+  if (!product) throw ErrorHandler.BadRequest("Product not exist");
+  return { product, message: "Product fetched successfully." };
+};
+
+export const latestProduct = async ({ limit = 10 }: { limit?: number }) => {
+  const product = await ProductModel.find({}).sort({ createdAt: -1 }).limit(limit);
   if (!product) throw ErrorHandler.BadRequest("Product not exist");
   return { product, message: "Product fetched successfully." };
 };

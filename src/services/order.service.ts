@@ -44,6 +44,9 @@ export const buySingleItem = async (
   if (!shippingAddress)
     throw ErrorHandler.BadRequest("Please select shipping address.");
 
+  // delete product.updatedAt;
+  // delete product._v;
+
   // - Payment gateway will integrate in future
   // - After payment successfully done
   const order = await OrderModel.create({

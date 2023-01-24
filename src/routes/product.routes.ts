@@ -25,7 +25,13 @@ router.delete(
 router.get("/by-category/:categoryId", tryCatch(controllers.fetchProducts));
 
 // - Get single product by Id
-router.get("/:productId", tryCatch(controllers.fetchProduct));
+router.get("/id/:productId", tryCatch(controllers.fetchProduct));
+
+// - Top rated product 
+router.get("/top-rated", tryCatch(controllers.topRatedProduct));
+
+// - Top rated product 
+router.get("/latest", tryCatch(controllers.latestProduct));
 
 // // - Update Product
 // Will make this later
