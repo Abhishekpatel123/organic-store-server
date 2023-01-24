@@ -22,7 +22,10 @@ router.delete(
 );
 
 // - Read Product
-router.get("/", tryCatch(controllers.fetchProducts));
+router.get("/by-category/:categoryId", tryCatch(controllers.fetchProducts));
+
+// - Get single product by Id
+router.get("/:productId", tryCatch(controllers.fetchProduct));
 
 // // - Update Product
 // Will make this later

@@ -7,7 +7,14 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 
 export const fetchProducts = async (req: Request, res: Response) => {
-  const response = await services.fetchProducts();
+  const categoryId = req.params.categoryId;
+  const response = await services.fetchProducts(categoryId);
+  res.status(200).json(response);
+};
+
+export const fetchProduct = async (req: Request, res: Response) => {
+  const productId = req.params.productId;
+  const response = await services.fetchProduct(productId);
   res.status(200).json(response);
 };
 

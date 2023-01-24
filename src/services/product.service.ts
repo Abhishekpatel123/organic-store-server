@@ -10,12 +10,20 @@ export const createProduct = async (data: ProductInterface) => {
   return { product, message: "Product updated successfully." };
 };
 
-export const fetchProducts = async () => {
-  const products = await ProductModel.find({});
+export const fetchProducts = async (categoryId: string) => {
+  // Filter by category
+  const products = await ProductModel.find({ category: categoryId });
   return { products, message: "Product fetched successfully." };
 };
 
-export const removeProduct = async (id: ProductInterface['_id']) => {
+export const fetchProduct = async (productId: string) => {
+  // Filter by category
+  const product = await ProductModel.findOne({ _id: productId });
+  if (!product) throw ErrorHandler.BadRequest("Product not exist");
+  return { product, message: "Product fetched successfully." };
+};
+
+export const removeProduct = async (id: ProductInterface["_id"]) => {
   const product = await ProductModel.findOne({ _id: id });
   if (!product) throw ErrorHandler.BadRequest("Product not exist.");
 

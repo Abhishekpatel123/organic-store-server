@@ -68,3 +68,8 @@ export const removeProduct = (
   console.log("- Validation Done");
   next();
 };
+
+// - Fetch Products by category
+// - Fetch single Product
+// params does not need validation
+
