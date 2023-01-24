@@ -25,7 +25,7 @@ export const topRatedProduct = async (req: Request, res: Response) => {
 
 export const latestProduct = async (req: Request, res: Response) => {
   // const data = { limit: 10 };
-  const response = await services.latestProduct();
+  const response = await services.latestProduct({});
   res.status(200).json(response);
 };
 
