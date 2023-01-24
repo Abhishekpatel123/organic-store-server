@@ -17,7 +17,7 @@ export interface ProductInterface extends Document {
   name: string;
   title: string;
   description: string;
-  rating: number;
+  // ratings: number;
   manufacture_details: any;
   pricing: PricingInterface;
   imageUrl: string;
@@ -34,9 +34,9 @@ const productSchema = new Schema<ProductInterface>(
     name: { type: String, required: true },
     title: { type: String, required: true },
     description: String,
-    rating: Number,
+    // ratings: Number,
     category: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: config.mongoConfig.collections.CATEGORIES,
       required: true,
     },

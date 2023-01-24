@@ -39,10 +39,6 @@ const userSchema = new Schema<UserInterface>({
   verify: { type: Boolean, default: false },
   addresses: [
     {
-      // address: {
-      //   type: Types.ObjectId,
-      //   ref: config.mongoConfig.collections.ADDRESSES,
-      // },
       addressId: { type: String, unique: true, required: true },
       name: { type: String, required: true },
       phone: { type: String, required: true },

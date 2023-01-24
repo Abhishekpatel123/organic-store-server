@@ -15,6 +15,7 @@ export default {
       ORDERS: "orders",
       CARTS: "carts",
       WISHLISTS: "wishlists",
+      RATINGS: "ratings",
     },
   },
   // - Mail

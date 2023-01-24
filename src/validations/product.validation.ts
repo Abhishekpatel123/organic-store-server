@@ -6,7 +6,7 @@ const productCommonSchema = Joi.object({
   name: Joi.string().required(),
   title: Joi.string().required(),
   description: Joi.string().required(),
-  rating: Joi.number().required(),
+  // rating: Joi.number().required(),
   manufacture_details: Joi.object(),
   pricing: Joi.object({
     basePrice: Joi.number().required(),

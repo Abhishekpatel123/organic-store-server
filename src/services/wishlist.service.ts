@@ -3,7 +3,7 @@
   import { ProductInterface } from "../database/models/ProductModel";
   import { UserInterface } from "../database/models/UserModel";
   import ErrorHandler from "../Error";
-  // string | Types.ObjectId
+  // string | Schema.Types.ObjectId
 
   export const addItemIntoWishlist = async (
     userId: UserInterface["_id"],

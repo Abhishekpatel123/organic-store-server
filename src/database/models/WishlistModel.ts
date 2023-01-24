@@ -15,7 +15,7 @@ const wishlistSchema = new Schema<WishlistInterface>({
   items: [
     {
       itemId: {
-        type: Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: config.mongoConfig.collections.PRODUCTS,
         unique: true,
         required: true,
