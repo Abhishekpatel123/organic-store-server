@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as authController from "../controllers/auth.controller";
-import { authenticate } from "../middleware";
-import { tryCatch } from "../utils";
+import { authenticate, tryCatch } from "../middleware";
+
 import * as validation from "../validations/auth.validation";
 
 const router = express.Router();

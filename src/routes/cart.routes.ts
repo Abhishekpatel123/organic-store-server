@@ -1,8 +1,8 @@
 import * as express from "express";
 import * as validation from "../validations/cart.validation";
 import * as controllers from "../controllers/cart.controller";
-import { tryCatch } from "../utils";
-import { authenticate } from "../middleware";
+
+import { authenticate, tryCatch } from "../middleware";
 
 const router = express.Router();
 

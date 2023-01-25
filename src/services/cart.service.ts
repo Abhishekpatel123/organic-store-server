@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { CartModel, ProductModel } from "../database/models";
 import { ProductInterface } from "../database/models/ProductModel";
 import { UserInterface } from "../database/models/UserModel";
-import ErrorHandler from "../Error";
+import BaseError from "../errors/base-error";
 
 export const addItemIntoCart = async (
   userId: UserInterface["_id"],
@@ -12,7 +12,7 @@ export const addItemIntoCart = async (
   const cart = await CartModel.findOne({ userId });
   const product = await ProductModel.findOne({ _id: itemId });
   // - If product is not exist or deleted
-  if (!product) throw ErrorHandler.BadRequest("Product not found");
+  if (!product) throw BaseError.notFound("Product not found");
 
   // - If cart not exist then create one
   if (!cart) {
@@ -69,7 +69,7 @@ export const removeCartItem = async (
 ) => {
   const cart = await CartModel.findOne({ userId });
   if (!cart)
-    throw ErrorHandler.BadRequest("Cart is not found or No item in cart");
+    throw BaseError.notFound("Cart is not found or No item in cart");
   const itemIndex = cart.items.findIndex(
     (item) => item.itemId.toString() === itemId
   );
@@ -85,5 +85,5 @@ export const removeCartItem = async (
     const updatedCart = await cart.save();
     return { cart: updatedCart, message: "Cart removed successfully" };
   }
-  throw ErrorHandler.BadRequest("Item or Product is not present");
+  throw BaseError.notFound("Item or Product is not present");
 };

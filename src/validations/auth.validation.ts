@@ -15,7 +15,7 @@ export const otpGenerator = (
   });
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return next(error);
   console.log("- Validation Done");
   next();
 };
@@ -30,7 +30,7 @@ export const otpVerify = (req: Request, res: Response, next: NextFunction) => {
   });
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return next(error);
   console.log("- Validation Done");
   next();
 };
@@ -52,7 +52,7 @@ export const address = (req: Request, res: Response, next: NextFunction) => {
   });
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return next(error);
   console.log("- Validation Done");
   next();
 };
@@ -79,7 +79,7 @@ export const updateAddress = (
   });
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return next(error);
   console.log("- Validation Done");
   next();
 };
@@ -97,7 +97,7 @@ export const removeAddress = (
   });
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return next(error);
   console.log("- Validation Done");
   next();
 };
@@ -115,7 +115,7 @@ export const makeShippingAddress = (
   });
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return next(error);
   console.log("- Validation Done");
   next();
 };

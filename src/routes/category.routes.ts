@@ -1,8 +1,7 @@
 import * as express from "express";
-import { upload } from "../middleware";
+import { upload, tryCatch } from "../middleware";
 import * as categoryValidation from "../validations/category.validation";
 import * as categoryControllers from "../controllers/../controllers/category.controller";
-import { tryCatch } from "../utils";
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-import ErrorHandler from "../../Error";
+import BaseError from "../../errors/base-error";
 import { UserModel } from "../models";
 
 interface CrateUserInterface {
@@ -22,7 +22,7 @@ const authRepository = {
       const user = await UserModel.findOne(query);
       return user;
     } catch (err: any) {
-      throw ErrorHandler.BadRequest(err.message);
+      throw BaseError.internalServer(err.message);
     }
   },
   CreateUser: async (data: CrateUserInterface) => {
@@ -30,7 +30,7 @@ const authRepository = {
       const user = await UserModel.create(data);
       return user;
     } catch (err: any) {
-      throw ErrorHandler.BadRequest(err.message);
+      throw BaseError.internalServer(err.message);
     }
   },
 
@@ -39,7 +39,7 @@ const authRepository = {
       const user = await UserModel.updateOne(query, update);
       return user;
     } catch (err: any) {
-      throw ErrorHandler.BadRequest(err.message);
+      throw BaseError.internalServer(err.message);
     }
   },
 };

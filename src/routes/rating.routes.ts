@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { authenticate } from "../middleware";
-import { tryCatch } from "../utils";
+import { authenticate, tryCatch } from "../middleware";
+
 import * as controllers from "../controllers/rating.controller";
 import * as validations from "../validations/rating.validation";
 

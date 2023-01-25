@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserModel } from "../database/models";
 import { UserInterface } from "../database/models/UserModel";
+import BaseError from "../errors/base-error";
 import * as utils from "../utils";
 
 declare global {
@@ -21,26 +22,24 @@ const authenticate = async (
 ) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token)
-    return res
-      .status(401)
-      .send({ message: "Your request does not contain Bearer token" });
+    return next(BaseError.unAuthorized("Your request does not with token"));
+
   try {
     const decoded: any = await utils.verifyToken(token);
-    console.log(decoded, "decoded");
-    const user = await UserModel.findOne({
+    const query = {
       email: decoded.email,
       "tokens.token": token,
-    });
+    };
+    const user = await UserModel.findOne(query);
     if (!user)
-      return res
-        .status(404)
-        .send({ message: "User not found or Access token has expired" });
+      return BaseError.badRequest("User not found or Access token has expired");
+
     req.token = token;
     req.user = user;
     console.log("- AUTHORIZATION DONE");
     next();
-  } catch (err) {
-    return res.status(401).send(err);
+  } catch (err: any) {
+    return BaseError.unAuthorized(err.message);
   }
 };
 

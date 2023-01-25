@@ -2,7 +2,7 @@
   import { WishlistModel, ProductModel } from "../database/models";
   import { ProductInterface } from "../database/models/ProductModel";
   import { UserInterface } from "../database/models/UserModel";
-  import ErrorHandler from "../Error";
+import BaseError from "../errors/base-error";
   // string | Schema.Types.ObjectId
 
   export const addItemIntoWishlist = async (
@@ -12,7 +12,7 @@
     const wishlist = await WishlistModel.findOne({ userId });
     const product = await ProductModel.findOne({ _id: itemId });
     // - If product is not exist or deleted
-    if (!product) throw ErrorHandler.BadRequest("Product not found");
+    if (!product) throw BaseError.notFound("Product not found");
 
     // - If wishlist not exist then create one
     if (!wishlist) {
@@ -57,7 +57,7 @@
   ) => {
     const wishlist = await WishlistModel.findOne({ userId });
     if (!wishlist)
-      throw ErrorHandler.BadRequest("Cart is not found or No item in wishlist");
+      throw BaseError.notFound("Cart is not found or No item in wishlist");
     const itemIndex = wishlist.items.findIndex(
       (item) => item.itemId.toString() === itemId
     );
@@ -67,5 +67,5 @@
       const updatedCart = await wishlist.save();
       return { wishlist: updatedCart, message: "Product removed successfully" };
     }
-    throw ErrorHandler.BadRequest("Item or Product is not present");
+    throw BaseError.notFound("Item or Product is not present");
   };

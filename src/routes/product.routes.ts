@@ -1,7 +1,8 @@
 import * as express from "express";
 import * as validation from "../validations/product.validation";
 import * as controllers from "../controllers/product.controller";
-import { tryCatch } from "../utils";
+import { tryCatch } from "../middleware";
+
 
 const router = express.Router();
 

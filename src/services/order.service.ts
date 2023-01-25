@@ -5,52 +5,46 @@ import ProductModel, {
   ProductInterface,
 } from "../database/models/ProductModel";
 import UserModel, { UserInterface } from "../database/models/UserModel";
-import ErrorHandler from "../Error";
+import BaseError from "../errors/base-error";
 
 // - Fetch orders and each order can contain multiple item
 export const fetchOrders = async (userId: UserInterface["_id"]) => {
   const orders = await OrderModel.find({ userId });
-  if (!orders) throw ErrorHandler.BadRequest("No order found.");
-  return { orders, message: "Product fetched successfully." };
+  if (!orders) return { orders: [], message: "No Order found." };
+  return { orders, message: "order fetched successfully." };
 };
 
 // - Fetch single order by order id
 export const fetchOrder = async (orderId: OrderInterface["_id"] | string) => {
   const order = await OrderModel.findOne({ _id: orderId });
-  if (!order) throw ErrorHandler.BadRequest("No order found.");
+  if (!order) return { orders: [], message: "No Order found." };
   return { order, message: "Product fetched successfully." };
 };
 
 // Buying single product not form the cart
-export const buySingleItem = async (
-  userId: UserInterface["_id"],
-  {
-    itemId,
-    quantity,
-  }: {
-    itemId: ProductInterface["_id"];
-    quantity: number;
-  }
-) => {
+export const buySingleItem = async ({
+  itemId,
+  quantity,
+  user,
+}: {
+  itemId: ProductInterface["_id"];
+  quantity: number;
+  user: UserInterface;
+}) => {
   const product = await ProductModel.findOne({ _id: itemId });
-  const user = await UserModel.findOne({ _id: userId });
-  if (!user || !product) throw ErrorHandler.BadRequest("Not found");
+  if (!product) return { message: "Product not exist." };
 
   const shippingAddress = user.addresses.find(
     (address) => address.isShippingAddress === true
   );
-  console.log(product, "product");
 
   if (!shippingAddress)
-    throw ErrorHandler.BadRequest("Please select shipping address.");
-
-  // delete product.updatedAt;
-  // delete product._v;
+    throw BaseError.notFound("Please select shipping address.");
 
   // - Payment gateway will integrate in future
   // - After payment successfully done
   const order = await OrderModel.create({
-    userId,
+    userId: user._id,
     paymentStatus: true,
     status: "PENDING",
     bill: product.pricing.basePrice,
@@ -61,10 +55,9 @@ export const buySingleItem = async (
 };
 
 // Buying products form cart
-export const buyItemFromCart = async (userId: UserInterface["_id"]) => {
-  const cart = await CartModel.findOne({ userId });
-  const user = await UserModel.findOne({ _id: userId });
-  if (!user || !cart) throw ErrorHandler.BadRequest("Not found");
+export const buyItemFromCart = async ({ user }: { user: UserInterface }) => {
+  const cart = await CartModel.findOne({ userId: user._id });
+  if (!cart) throw BaseError.notFound("Cart Not found.");
 
   const shippingAddress = user.addresses.find(
     (address) => address.isShippingAddress === true
@@ -72,7 +65,7 @@ export const buyItemFromCart = async (userId: UserInterface["_id"]) => {
   // - Payment gateway will integrate in future
   // - After payment successfully done
   const order = await OrderModel.create({
-    userId,
+    userId: user._id,
     paymentStatus: true,
     status: "PENDING",
     bill: cart.bill,

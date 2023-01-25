@@ -10,6 +10,7 @@ import {
   wishlistRoutes,
 } from "./routes";
 import * as compression from "compression";
+import BaseError from "./errors/base-error";
 
 export default (app: express.Application) => {
   // - Middleware
@@ -34,4 +35,16 @@ export default (app: express.Application) => {
 
   // - Error handling
   app.use(errorHandler);
+
+  // Programmer errors
+  process.on("uncaughtException", (error: BaseError) => {
+    // logger(error)
+
+    // - If error is programmer error
+    if (!error.isOperational) process.exit(1);
+  });
+  
+  process.on("unhandledRejection", (reason: Error) => {
+    throw reason;
+  });
 };
