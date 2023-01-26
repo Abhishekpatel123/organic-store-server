@@ -1,4 +1,5 @@
 import * as express from "express";
+import * as cors from "cors";
 import { errorHandler } from "./middleware";
 import {
   cartRoutes,
@@ -14,6 +15,7 @@ import BaseError from "./errors/base-error";
 
 export default (app: express.Application) => {
   // - Middleware
+  app.use(cors({ origin: ["http://localhost:4200"] }));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(
@@ -43,7 +45,7 @@ export default (app: express.Application) => {
     // - If error is programmer error
     if (!error.isOperational) process.exit(1);
   });
-  
+
   process.on("unhandledRejection", (reason: Error) => {
     throw reason;
   });
