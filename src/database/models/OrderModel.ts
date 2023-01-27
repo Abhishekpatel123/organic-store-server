@@ -5,14 +5,14 @@
 
 import { Schema, model, Document, Types } from "mongoose";
 import config from "../../config";
-import { ProductInterface } from "./ProductModel";
+import { PricingInterface, ProductInterface } from "./ProductModel";
 
 export interface OrderInterface extends Document {
   userId: string;
   paymentStatus: string;
   status: string;
   bill: number;
-  items: Types.Array<ProductInterface>;
+  items: Types.Array<OrderItemInterface>;
   shippingAddress: {
     name: string;
     phone: string;
@@ -27,6 +27,23 @@ export interface OrderInterface extends Document {
   };
 }
 
+export interface OrderItemInterface {
+  // item: {
+  sku: string;
+  name: string;
+  title: string;
+  description: string;
+  avgRating: number;
+  ratingCount: number;
+  ratingValue: number;
+  manufacture_details: any;
+  pricing: PricingInterface;
+  imageUrl: string;
+  category: any;
+  // };
+  quantity: number;
+}
+
 const orderSchema = new Schema<OrderInterface>({
   userId: { type: String, required: true },
   paymentStatus: { type: String, required: true },
@@ -34,7 +51,9 @@ const orderSchema = new Schema<OrderInterface>({
   bill: { type: Number, required: true },
   items: [
     {
-      sku: { type: String, required: true, unique: true },
+      // item: {
+      // - sku not unique here because same sku product can user buy more time
+      sku: { type: String, required: true },
       name: { type: String, required: true },
       title: { type: String, required: true },
       description: String,
@@ -51,7 +70,8 @@ const orderSchema = new Schema<OrderInterface>({
         discount: Number,
       },
       imageUrl: String,
-      countInStock: { type: Number, required: true },
+      // },
+      quantity: { type: Number, required: true },
     },
   ],
   shippingAddress: {

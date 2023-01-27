@@ -1,11 +1,19 @@
+import constants from "../constants";
 import { OrderModel } from "../database/models";
-import CartModel, { CartInterface } from "../database/models/CartModel";
-import { OrderInterface } from "../database/models/OrderModel";
+import CartModel, {
+  CartInterface,
+  ExtendedCartItemInterface,
+} from "../database/models/CartModel";
+import {
+  OrderInterface,
+  OrderItemInterface,
+} from "../database/models/OrderModel";
 import ProductModel, {
   ProductInterface,
 } from "../database/models/ProductModel";
 import UserModel, { UserInterface } from "../database/models/UserModel";
 import BaseError from "../errors/base-error";
+import { makePayment } from "../utils";
 
 // - Fetch orders and each order can contain multiple item
 export const fetchOrders = async (userId: UserInterface["_id"]) => {
@@ -45,32 +53,66 @@ export const buySingleItem = async ({
   // - After payment successfully done
   const order = await OrderModel.create({
     userId: user._id,
-    paymentStatus: true,
+    paymentStatus: constants.status.pending,
     status: "PENDING",
     bill: product.pricing.basePrice,
-    items: [product],
+    items: [{ ...product, quantity }],
     shippingAddress,
   });
-  return { order, message: "Item order successfully" };
+
+  const { url } = await makePayment({ items: order.items });
+  return { url, message: "Successfully created the url." };
 };
 
 // Buying products form cart
 export const buyItemFromCart = async ({ user }: { user: UserInterface }) => {
-  const cart = await CartModel.findOne({ userId: user._id });
-  if (!cart) throw BaseError.notFound("Cart Not found.");
+  const cart = await CartModel.findOne({ userId: user._id })
+    .populate<{
+      items: ExtendedCartItemInterface[];
+    }>("items.itemId")
+    .select("-items.basePrice");
 
+  if (!cart || cart.items?.length === 0)
+    throw BaseError.notFound("Cart items Not found.");
   const shippingAddress = user.addresses.find(
     (address) => address.isShippingAddress === true
   );
+
+  const items: OrderItemInterface[] = [];
+
+  cart.items.forEach((item) =>
+    items.push({
+      sku: item.itemId.sku,
+      name: item.itemId.name,
+      title: item.itemId.title,
+      description: item.itemId.description,
+      avgRating: item.itemId.avgRating,
+      ratingCount: item.itemId.ratingCount,
+      ratingValue: item.itemId.ratingValue,
+      manufacture_details: item.itemId.manufacture_details,
+      pricing: item.itemId.pricing,
+      imageUrl: item.itemId.imageUrl,
+      category: item.itemId.category,
+      quantity: item.quantity,
+    })
+  );
+  console.log(items, "items iterd");
   // - Payment gateway will integrate in future
-  // - After payment successfully done
+  const { url } = await makePayment({ items });
+
+  // -
   const order = await OrderModel.create({
     userId: user._id,
-    paymentStatus: true,
+    paymentStatus: constants.status.pending,
     status: "PENDING",
     bill: cart.bill,
-    items: cart.items,
+    items,
     shippingAddress,
   });
-  return { order, message: "Item order successfully" };
+
+  // deleting items from cart
+  cart.items = [];
+  await cart.save();
+
+  return { order, url, message: "Item order successfully" };
 };

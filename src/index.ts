@@ -3,7 +3,8 @@ import * as express from "express";
 import expressApp from "./expressApp";
 import dbConnection from "./database/connection";
 const PORT = 5000;
-
+import config from "./config";
+console.log(config);
 const startServer = async () => {
   const app: express.Application = express();
 

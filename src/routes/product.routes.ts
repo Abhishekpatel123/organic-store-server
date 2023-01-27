@@ -23,7 +23,7 @@ router.delete(
 );
 
 // - Read Product bu category
-router.get("/by-category/:categoryId", tryCatch(controllers.fetchProducts));
+router.get("/by-category/:categoryName", tryCatch(controllers.fetchProducts));
 
 // - Get single product by Id
 router.get("/id/:productId", tryCatch(controllers.fetchProduct));

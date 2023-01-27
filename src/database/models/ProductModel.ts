@@ -1,12 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 import config from "../../config";
 
-// interface ImageInterface {
-//   imageUrl: string;
-//   color: string;
-// }
-
-interface PricingInterface {
+export interface PricingInterface {
   basePrice: number;
   currency: string;
   discount: number;

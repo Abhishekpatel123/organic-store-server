@@ -4,6 +4,13 @@ import { ProductInterface } from "../database/models/ProductModel";
 import { UserInterface } from "../database/models/UserModel";
 import BaseError from "../errors/base-error";
 
+
+
+export const fetchCart = async (userId: UserInterface["_id"]) => {
+  const cart = await CartModel.findOne({ userId }).populate("items.itemId");
+  return { cart, message: "Cart fetched successfully." };
+};
+
 export const addItemIntoCart = async (
   userId: UserInterface["_id"],
   itemId: ProductInterface["_id"],
@@ -35,9 +42,10 @@ export const addItemIntoCart = async (
     let item = cart.items[itemIndex];
     item.quantity += quantity;
 
-    cart.bill = cart.items.reduce((acc, curr) => {
-      return acc + curr.quantity * curr.basePrice;
-    }, 0);
+    cart.bill = cart.items.reduce(
+      (acc, curr) => acc + curr.quantity * curr.basePrice,
+      0
+    );
 
     cart.items[itemIndex] = item;
     const savedCart = await cart.save();
@@ -58,18 +66,13 @@ export const addItemIntoCart = async (
   return { cart: savedCart, message: "Successfully Item or Product Added" };
 };
 
-export const fetchCart = async (userId: UserInterface["_id"]) => {
-  const cart = await CartModel.findOne({ userId }).populate("items.itemId");
-  return { cart, message: "Cart fetched successfully." };
-};
 
 export const removeCartItem = async (
   userId: UserInterface["_id"],
   itemId: ProductInterface["_id"]
 ) => {
   const cart = await CartModel.findOne({ userId });
-  if (!cart)
-    throw BaseError.notFound("Cart is not found or No item in cart");
+  if (!cart) throw BaseError.notFound("Cart is not found or No item in cart");
   const itemIndex = cart.items.findIndex(
     (item) => item.itemId.toString() === itemId
   );

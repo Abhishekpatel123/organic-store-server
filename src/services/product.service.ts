@@ -1,18 +1,25 @@
 import { v4 as uuidv4 } from "uuid";
-import { ProductModel } from "../database/models";
+import { CategoryModel, ProductModel } from "../database/models";
 import { ProductInterface } from "../database/models/ProductModel";
 import BaseError from "../errors/base-error";
-
 import * as utils from "../utils";
 
 export const createProduct = async (data: ProductInterface) => {
-  const product = await ProductModel.create(data);
+  const sku = `${data.category}-${uuidv4()}`;
+  const category = await CategoryModel.findOne({name : data.category})
+  if(!category) throw BaseError.badRequest("This category not exist")
+  const product = await ProductModel.create({
+    ...data,
+    sku,
+    category : category?._id
+  });
   return { product, message: "Product updated successfully." };
 };
 
-export const fetchProducts = async (categoryId: string) => {
+export const fetchProducts = async (categoryName: string) => {
+  const category = await CategoryModel.findOne({ name: categoryName });
   // Filter by category
-  const products = await ProductModel.find({ category: categoryId });
+  const products = await ProductModel.find({ category: category?._id });
   return { products, message: "Product fetched successfully." };
 };
 

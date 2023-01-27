@@ -2,7 +2,6 @@ import * as express from "express";
 import { authenticate, tryCatch } from "../middleware";
 import * as controllers from "../controllers/order.controller";
 
-
 const router = express.Router();
 
 // - Get orders

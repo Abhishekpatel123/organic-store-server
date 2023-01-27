@@ -8,8 +8,8 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 
 export const fetchProducts = async (req: Request, res: Response) => {
-  const categoryId = req.params.categoryId;
-  const response = await services.fetchProducts(categoryId);
+  const categoryName = req.params.categoryName;
+  const response = await services.fetchProducts(categoryName);
   res.status(httpStatusCodes.OK).json(response);
 };
 

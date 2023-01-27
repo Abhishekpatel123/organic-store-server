@@ -1,10 +1,17 @@
 import { Schema, model, Document, Types } from "mongoose";
 import config from "../../config";
+import { ProductInterface } from "./ProductModel";
 
 export interface CartItemInterface {
-  itemId: string;
+  itemId: Types.ObjectId;
   basePrice: number;
   quantity: number;
+}
+
+export interface ExtendedCartItemInterface {
+  quantity: number;
+  itemId: ProductInterface;
+  basePrice: number;
 }
 
 export interface CartInterface extends Document {

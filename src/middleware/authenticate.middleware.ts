@@ -26,20 +26,23 @@ const authenticate = async (
 
   try {
     const decoded: any = await utils.verifyToken(token);
+    console.log(decoded, "decoded");
     const query = {
       email: decoded.email,
       "tokens.token": token,
     };
     const user = await UserModel.findOne(query);
     if (!user)
-      return BaseError.badRequest("User not found or Access token has expired");
+      return next(
+        BaseError.badRequest("User not found or Access token has expired")
+      );
 
     req.token = token;
     req.user = user;
     console.log("- AUTHORIZATION DONE");
     next();
   } catch (err: any) {
-    return BaseError.unAuthorized(err.message);
+    return next(BaseError.unAuthorized(err.message));
   }
 };
 

@@ -1,6 +1,19 @@
-import * as dotenv from "dotenv";
+import "dotenv/config";
+import { cleanEnv, str, email, num } from "envalid";
 
-dotenv.config();
+const env = cleanEnv(process.env, {
+  MONGO_URL: str(),
+  PORT: num(),
+  SERVER_URL: str(),
+  CLIENT_URL: str(),
+  EMAIL_USERNAME: str(),
+  EMAIL_PASSWORD: str(),
+  JWT_SECRET: str(),
+  CLOUDINARY_NAME: str(),
+  CLOUDINARY_API_KEY: str(),
+  CLOUDINARY_API_SECRET: str(),
+  STRIPE_SECRET_KEY: str(),
+});
 
 export default {
   // - DB config
@@ -20,16 +33,16 @@ export default {
   },
   // - Mail
   nodemailerConfig: {
-    EMAIL: process.env.EMAIL_USERNAME,
-    PASSWORD: process.env.EMAIL_PASSWORD,
+    EMAIL: env.EMAIL_USERNAME,
+    PASSWORD: env.EMAIL_PASSWORD,
   },
   //
-  PORT: process.env.PORT,
-  SERVER_URL: process.env.BACKEND_URL,
-  CLIENT_URL: process.env.CLIENT_URL,
-  JWT_SECRET:
-    process.env.JWT_SECRET || "sdfsflsdfjslkfjsldfjslfsjflsffjfdffdjkb",
-  CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
-  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+  PORT: env.PORT,
+  SERVER_URL: env.SERVER_URL,
+  CLIENT_URL: env.CLIENT_URL,
+  JWT_SECRET: env.JWT_SECRET || "sdfsflsdfjslkfjsldfjslfsjflsffjfdffdjkb",
+  CLOUDINARY_NAME: env.CLOUDINARY_NAME,
+  CLOUDINARY_API_KEY: env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: env.CLOUDINARY_API_SECRET,
+  STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY || "",
 };
