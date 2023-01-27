@@ -15,7 +15,7 @@ import BaseError from "./errors/base-error";
 
 export default (app: express.Application) => {
   // - Middleware
-  // app.use(cors({ origin: ["http://localhost:4200"] }));
+  app.use(cors({ origin: "*" }));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(
