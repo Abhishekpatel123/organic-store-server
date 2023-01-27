@@ -3,15 +3,28 @@ import config from "../config";
 import constants from "../constants";
 import { OrderItemInterface } from "../database/models/OrderModel";
 
-const stripe = new Stripe(config.STRIPE_SECRET_KEY, {
+export const stripe = new Stripe(config.STRIPE_SECRET_KEY, {
   apiVersion: "2022-11-15",
 });
 
-export const makePayment = async ({
-  items,
-}: {
+interface makePaymentInterface {
+  metadata: {
+    userId: string;
+    productId: string | null;
+    cartId: string | null;
+  };
   items: OrderItemInterface[];
-}) => {
+  email: string;
+}
+export const makePayment = async ({
+  metadata,
+  items,
+  email,
+}: makePaymentInterface) => {
+  metadata.userId;
+  // create customer
+  const customer = await stripe.customers.create({ metadata });
+
   const line_items = items.map((item: OrderItemInterface) => ({
     price_data: {
       currency: "USD",
@@ -25,6 +38,7 @@ export const makePayment = async ({
   }));
 
   const session = await stripe.checkout.sessions.create({
+    customer: customer.id,
     currency: "usd",
     line_items: line_items,
     mode: "payment",

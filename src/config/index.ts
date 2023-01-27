@@ -13,6 +13,7 @@ const env = cleanEnv(process.env, {
   CLOUDINARY_API_KEY: str(),
   CLOUDINARY_API_SECRET: str(),
   STRIPE_SECRET_KEY: str(),
+  STRIPE_ENDPOINT_SECRET: str(),
 });
 
 export default {
@@ -45,4 +46,5 @@ export default {
   CLOUDINARY_API_KEY: env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: env.CLOUDINARY_API_SECRET,
   STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY || "",
+  STRIPE_ENDPOINT_SECRET: env.STRIPE_ENDPOINT_SECRET,
 };

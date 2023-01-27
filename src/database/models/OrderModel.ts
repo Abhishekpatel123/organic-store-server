@@ -7,8 +7,10 @@ import { Schema, model, Document, Types } from "mongoose";
 import config from "../../config";
 import { PricingInterface, ProductInterface } from "./ProductModel";
 
-export interface OrderInterface extends Document {
+export interface OrderInterface {
   userId: string;
+  customerId: string;
+  paymentIntentId: string;
   paymentStatus: string;
   status: string;
   bill: number;
@@ -46,6 +48,8 @@ export interface OrderItemInterface {
 
 const orderSchema = new Schema<OrderInterface>({
   userId: { type: String, required: true },
+  customerId: String,
+  paymentIntentId: String,
   paymentStatus: { type: String, required: true },
   status: { type: String, required: true },
   bill: { type: Number, required: true },
@@ -89,7 +93,7 @@ const orderSchema = new Schema<OrderInterface>({
   },
 });
 
-const OrderModel = model<OrderInterface>(
+const OrderModel = model<OrderInterface & Document>(
   config.mongoConfig.collections.ORDERS,
   orderSchema
 );

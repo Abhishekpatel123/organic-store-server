@@ -8,6 +8,7 @@ import {
   productRoutes,
   ratingRoutes,
   userRoutes,
+  webhookRoutes,
   wishlistRoutes,
 } from "./routes";
 import * as compression from "compression";
@@ -16,6 +17,7 @@ import BaseError from "./errors/base-error";
 export default (app: express.Application) => {
   // - Middleware
   app.use(cors({ origin: "*" }));
+  app.use("/api/v1/webhook", webhookRoutes);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(

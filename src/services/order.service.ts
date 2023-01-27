@@ -23,7 +23,7 @@ export const fetchOrders = async (userId: UserInterface["_id"]) => {
 };
 
 // - Fetch single order by order id
-export const fetchOrder = async (orderId: OrderInterface["_id"] | string) => {
+export const fetchOrder = async (orderId: string) => {
   const order = await OrderModel.findOne({ _id: orderId });
   if (!order) return { orders: [], message: "No Order found." };
   return { order, message: "Product fetched successfully." };
@@ -42,26 +42,36 @@ export const buySingleItem = async ({
   const product = await ProductModel.findOne({ _id: itemId });
   if (!product) return { message: "Product not exist." };
 
-  const shippingAddress = user.addresses.find(
-    (address) => address.isShippingAddress === true
-  );
+  const metadata = {
+    userId: user._id.toString(),
+    productId: null,
+    cartId: null,
+  };
 
-  if (!shippingAddress)
-    throw BaseError.notFound("Please select shipping address.");
+  const { url } = await makePayment({
+    items: [{ ...product, quantity }],
+    metadata,
+    email: user.email,
+  });
+  return { url, message: "Successfully created the url." };
+
+  // const shippingAddress = user.addresses.find(
+  //   (address) => address.isShippingAddress === true
+  // );
+
+  // if (!shippingAddress)
+  //   throw BaseError.notFound("Please select shipping address.");
 
   // - Payment gateway will integrate in future
   // - After payment successfully done
-  const order = await OrderModel.create({
-    userId: user._id,
-    paymentStatus: constants.status.pending,
-    status: "PENDING",
-    bill: product.pricing.basePrice,
-    items: [{ ...product, quantity }],
-    shippingAddress,
-  });
-
-  const { url } = await makePayment({ items: order.items });
-  return { url, message: "Successfully created the url." };
+  // const order = await OrderModel.create({
+  //   userId: user._id,
+  //   paymentStatus: constants.status.pending,
+  //   status: "PENDING",
+  //   bill: product.pricing.basePrice,
+  //   items: [{ ...product, quantity }],
+  //   shippingAddress,
+  // });
 };
 
 // Buying products form cart
@@ -71,12 +81,8 @@ export const buyItemFromCart = async ({ user }: { user: UserInterface }) => {
       items: ExtendedCartItemInterface[];
     }>("items.itemId")
     .select("-items.basePrice");
-
   if (!cart || cart.items?.length === 0)
     throw BaseError.notFound("Cart items Not found.");
-  const shippingAddress = user.addresses.find(
-    (address) => address.isShippingAddress === true
-  );
 
   const items: OrderItemInterface[] = [];
 
@@ -96,23 +102,32 @@ export const buyItemFromCart = async ({ user }: { user: UserInterface }) => {
       quantity: item.quantity,
     })
   );
-  console.log(items, "items iterd");
+
+  const metadata = {
+    userId: user._id.toString(),
+    productId: null,
+    cartId: cart._id.toString(),
+  };
+
   // - Payment gateway will integrate in future
-  const { url } = await makePayment({ items });
+  const { url } = await makePayment({ metadata, items, email: user.email });
+  return { url, message: "Item order successfully" };
+
+  // const shippingAddress = user.addresses.find(
+  //   (address) => address.isShippingAddress === true
+  // );
 
   // -
-  const order = await OrderModel.create({
-    userId: user._id,
-    paymentStatus: constants.status.pending,
-    status: "PENDING",
-    bill: cart.bill,
-    items,
-    shippingAddress,
-  });
+  // const order = await OrderModel.create({
+  //   userId: user._id,
+  //   paymentStatus: constants.status.pending,
+  //   status: "PENDING",
+  //   bill: cart.bill,
+  //   items,
+  //   shippingAddress,
+  // });
 
   // deleting items from cart
-  cart.items = [];
-  await cart.save();
-
-  return { order, url, message: "Item order successfully" };
+  // cart.items = [];
+  // await cart.save();
 };

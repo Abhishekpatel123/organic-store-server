@@ -1,8 +1,13 @@
-import { Router } from "express";
+import * as express from "express";
 import { tryCatch } from "../middleware";
 import * as controllers from "../controllers/webhook.controller";
-const router = Router();
 
-router.post("/", controllers.webhook);
+const router = express.Router();
 
-export default Router;
+router.post(
+  "/",
+  express.raw({ type: "application/json" }),
+  tryCatch(controllers.webhook)
+);
+
+export default router;

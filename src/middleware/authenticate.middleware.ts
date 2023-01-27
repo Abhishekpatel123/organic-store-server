@@ -26,7 +26,6 @@ const authenticate = async (
 
   try {
     const decoded: any = await utils.verifyToken(token);
-    console.log(decoded, "decoded");
     const query = {
       email: decoded.email,
       "tokens.token": token,
