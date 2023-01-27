@@ -12,7 +12,6 @@ export const makePayment = async ({
 }: {
   items: OrderItemInterface[];
 }) => {
-  console.log(items[0], "items berfore");
   const line_items = items.map((item: OrderItemInterface) => ({
     price_data: {
       currency: "USD",
@@ -40,7 +39,6 @@ export const paymentSuccess = async ({
 }: {
   items: OrderItemInterface[];
 }) => {
-  console.log(items[0], "items berfore");
   const line_items = items.map((item: OrderItemInterface) => ({
     price_data: {
       currency: "USD",

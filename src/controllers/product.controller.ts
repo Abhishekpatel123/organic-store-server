@@ -14,8 +14,8 @@ export const fetchProducts = async (req: Request, res: Response) => {
 };
 
 export const fetchProduct = async (req: Request, res: Response) => {
-  const productId = req.params.productId;
-  const response = await services.fetchProduct(productId);
+  const sku = req.params.sku;
+  const response = await services.fetchProduct(sku);
   res.status(httpStatusCodes.OK).json(response);
 };
 

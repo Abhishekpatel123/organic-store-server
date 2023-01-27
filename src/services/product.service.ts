@@ -6,12 +6,12 @@ import * as utils from "../utils";
 
 export const createProduct = async (data: ProductInterface) => {
   const sku = `${data.category}-${uuidv4()}`;
-  const category = await CategoryModel.findOne({name : data.category})
-  if(!category) throw BaseError.badRequest("This category not exist")
+  const category = await CategoryModel.findOne({ name: data.category });
+  if (!category) throw BaseError.badRequest("This category not exist");
   const product = await ProductModel.create({
     ...data,
     sku,
-    category : category?._id
+    category: category?._id,
   });
   return { product, message: "Product updated successfully." };
 };
@@ -23,9 +23,10 @@ export const fetchProducts = async (categoryName: string) => {
   return { products, message: "Product fetched successfully." };
 };
 
-export const fetchProduct = async (productId: string) => {
-  const product = await ProductModel.findOne({ _id: productId });
-  if (!product) return { orders: null, message: "No Product found." };
+export const fetchProduct = async (sku: string) => {
+  const product = await ProductModel.findOne({ sku });
+  console.log(sku, product);
+  if (!product) return { product: null, message: "No Product found." };
   return { product, message: "Product fetched successfully." };
 };
 

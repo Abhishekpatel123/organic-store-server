@@ -26,7 +26,7 @@ router.delete(
 router.get("/by-category/:categoryName", tryCatch(controllers.fetchProducts));
 
 // - Get single product by Id
-router.get("/id/:productId", tryCatch(controllers.fetchProduct));
+router.get("/id/:sku", tryCatch(controllers.fetchProduct));
 
 // - Top rated product 
 router.get("/top-rated", tryCatch(controllers.topRatedProduct));
