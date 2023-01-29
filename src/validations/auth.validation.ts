@@ -65,7 +65,7 @@ export const updateAddress = (
   const data = req.body;
 
   const schema = Joi.object({
-    addressId: Joi.string().required(),
+    _id: Joi.string().required(),
     name: Joi.string().required(),
     phone: Joi.string().required(),
     pinCode: Joi.number().required(),
@@ -93,7 +93,7 @@ export const removeAddress = (
   const data = req.body;
 
   const schema = Joi.object({
-    addressId: Joi.string().required(),
+    _id: Joi.string().required(),
   });
 
   const { error } = schema.validate(data);
@@ -111,7 +111,7 @@ export const makeShippingAddress = (
   const data = req.params;
 
   const schema = Joi.object({
-    addressId: Joi.string().required(),
+    _id: Joi.string().required(),
   });
 
   const { error } = schema.validate(data);

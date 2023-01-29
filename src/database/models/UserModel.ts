@@ -6,7 +6,7 @@ interface TokenInterface {
 }
 
 export interface AddressInterface {
-  addressId: string;
+  _id: Types.ObjectId;
   name: string;
   phone: string;
   pinCode: number;
@@ -39,7 +39,6 @@ const userSchema = new Schema<UserInterface>({
   verify: { type: Boolean, default: false },
   addresses: [
     {
-      addressId: { type: String, unique: true, required: true },
       name: { type: String, required: true },
       phone: { type: String, required: true },
       pinCode: { type: Number, required: true },

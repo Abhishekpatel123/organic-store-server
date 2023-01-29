@@ -41,14 +41,11 @@ export const otpVerify = async (
   return { user, token, message: "Successfully !" };
 };
 
-export const makeShippingAddress = async (
-  req: Request,
-  addressId: AddressInterface["addressId"]
-) => {
+export const makeShippingAddress = async (req: Request, addressId: string) => {
   const previousAddresses = req.user.addresses;
   let isOneAddressModified = false;
   const addresses = req.user.addresses.map((address) => {
-    if (address.addressId === addressId) {
+    if (address._id.toString() === addressId) {
       isOneAddressModified = true;
       return { ...address, isShippingAddress: true };
     }
@@ -62,8 +59,4 @@ export const makeShippingAddress = async (
   return {
     message: "Successfully make this address to shipping address.",
   };
-  // const address = await UserModel.updateOne(
-  //   { _id: userId, "addresses.address": addressId },
-  //   { $set: { "addresses.$.isShippingAddress": true } }
-  // );
 };

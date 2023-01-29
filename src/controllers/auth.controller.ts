@@ -16,43 +16,50 @@ export const otpVerify = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.OK).json(data);
 };
 
+export const getUser = (req: Request, res: Response) => {
+  const data = req.user;
+  res.status(httpStatusCodes.OK).json({ user: data });
+};
+
 export const addAddress = async (req: Request, res: Response) => {
   // const address = await AddressModel.create(req.body);
   const { addresses = [] } = req.user;
-  const addressId = uuidv4();
   const isShippingAddress = addresses.length === 0;
-  req.user.addresses.push({
+  const address = {
     ...req.body,
-    addressId,
     isShippingAddress,
-  });
-  await req.user.save();
+  };
+  console.log(address, "ad");
+  req.user.addresses.push(address);
+  const user = await req.user.save();
+  console.log(user, "user");
   return res
     .status(httpStatusCodes.CREATED)
     .send({ message: "Success", addresses: req.user.addresses });
 };
 
 export const getAddresses = async (req: Request, res: Response) => {
-  const user = await req.user?.populate("addresses");
   return res.status(httpStatusCodes.OK).send({
     message: "Successfully fetched addresses",
-    addresses: user?.addresses,
+    addresses: req.user?.addresses,
   });
 };
 
 export const updateAddress = async (req: Request, res: Response) => {
-  const { addressId, ...data } = req.body;
+  const { _id, ...data } = req.body;
   // const address = await AddressModel.findOne({ _id: id });
   // if (!address) return res.status(404).send({ message: "Address not exist." });
   await UserModel.updateOne(
-    { _id: req.user._id, "addresses.addressId": addressId },
+    { _id: req.user._id, "addresses._id": _id },
     { $set: { "addresses.$": data } }
   );
-  return res.status(httpStatusCodes.OK).send({ message: "Successfully Updated Address" });
+  return res
+    .status(httpStatusCodes.OK)
+    .send({ message: "Successfully Updated Address" });
 };
 
 export const deleteAddress = async (req: Request, res: Response) => {
-  const { addressId } = req.body;
+  const { _id } = req.body;
   // const address = await AddressModel.findOne({ _id: id });
   // if (!address) return res.status(404).send({ message: "Address not exist." });
 
@@ -66,7 +73,7 @@ export const deleteAddress = async (req: Request, res: Response) => {
   //  2nd way
   await UserModel.updateOne(
     { _id: req.user._id },
-    { $pull: { addresses: { addressId } } }
+    { $pull: { addresses: { _id } } }
   );
   return res.status(httpStatusCodes.OK).send({
     message: "Successfully Removed Address",

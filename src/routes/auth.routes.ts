@@ -20,6 +20,8 @@ router.post(
   tryCatch(authController.otpVerify)
 );
 
+// get user details
+router.get("/", authenticate, tryCatch(authController.getUser));
 // - Add Address
 router.post(
   "/addresses",
@@ -35,7 +37,6 @@ router.post(
   validation.makeShippingAddress,
   tryCatch(authController.makeShippingAddress)
 );
-
 
 // - Fetch Address
 router.get("/addresses", authenticate, tryCatch(authController.getAddresses));
