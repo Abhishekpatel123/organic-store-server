@@ -111,7 +111,7 @@ export const makeShippingAddress = (
   const data = req.params;
 
   const schema = Joi.object({
-    _id: Joi.string().required(),
+    addressId: Joi.string().required(),
   });
 
   const { error } = schema.validate(data);
