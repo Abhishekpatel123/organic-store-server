@@ -14,7 +14,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
   const customer = await stripe.customers.retrieve(paymentIntent?.customer);
   if (customer.deleted === true) {
   } else {
-    const { userId, cartId, productId } = customer.metadata;
+    const { userId, productId, quantity } = customer.metadata;
     const user = await UserModel.findOne({ _id: userId });
     if (!user) throw BaseError.notFound("User not found.");
 
@@ -27,7 +27,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
     if (productId) {
       const product = await ProductModel.findOne({ _id: productId });
       if (!product) throw BaseError.notFound("Product not found.");
-      order = OrderModel.create({
+      order = await OrderModel.create({
         userId,
         customerId: paymentIntent.customer,
         paymentIntentId: paymentIntent.payment_intent,
@@ -35,7 +35,8 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
         status: constants.status.pending,
         shippingAddress,
         bill: product.pricing.basePrice,
-        items: [product],
+        items: [{ ...product, quantity: quantity }],
+        paymentType: constants.paymentType.online,
       });
 
       return { order, message: "Order payment successfully completed." };
@@ -79,6 +80,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
       items,
       bill: cart.bill,
       shippingAddress,
+      paymentType: constants.paymentType.online,
     });
     console.log(order, "order");
     return { order, message: "Order payment successfully completed." };

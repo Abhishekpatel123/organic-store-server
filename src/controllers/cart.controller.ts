@@ -16,6 +16,12 @@ export const fetchCart = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.OK).json(response);
 };
 
+export const getBilling = async (req: Request, res: Response) => {
+  const userId = req.user._id;
+  const response = await services.getBilling(userId);
+  res.status(httpStatusCodes.OK).json(response);
+};
+
 export const removeCartItem = async (req: Request, res: Response) => {
   const { itemId } = req.body;
   const userId = req.user._id;

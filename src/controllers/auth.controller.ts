@@ -49,13 +49,14 @@ export const updateAddress = async (req: Request, res: Response) => {
   const { _id, ...data } = req.body;
   // const address = await AddressModel.findOne({ _id: id });
   // if (!address) return res.status(404).send({ message: "Address not exist." });
-  await UserModel.updateOne(
+  const user = await UserModel.updateOne(
     { _id: req.user._id, "addresses._id": _id },
-    { $set: { "addresses.$": data } }
+    { $set: { "addresses.$": data } },
+    { new: true }
   );
   return res
     .status(httpStatusCodes.OK)
-    .send({ message: "Successfully Updated Address" });
+    .send({ message: "Successfully Updated Address", addresses: user });
 };
 
 export const deleteAddress = async (req: Request, res: Response) => {

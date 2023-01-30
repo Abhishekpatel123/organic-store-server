@@ -14,6 +14,7 @@ export interface OrderInterface {
   paymentStatus: string;
   status: string;
   bill: number;
+  paymentType: string;
   items: Types.Array<OrderItemInterface>;
   shippingAddress: {
     name: string;
@@ -53,6 +54,7 @@ const orderSchema = new Schema<OrderInterface>({
   paymentStatus: { type: String, required: true },
   status: { type: String, required: true },
   bill: { type: Number, required: true },
+  paymentType: { type: String, required: true },
   items: [
     {
       // item: {

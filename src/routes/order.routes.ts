@@ -17,6 +17,11 @@ router.get("/:orderId", authenticate, tryCatch(controllers.fetchOrder));
 // Checkout
 router.post("/checkout", authenticate, tryCatch(controllers.createOrder));
 
+// Cash on delivery
+router.post("/cod", authenticate, tryCatch(controllers.codOrder));
+
+
+
 // No option for update and delete
 
 export default router;

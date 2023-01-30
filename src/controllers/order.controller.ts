@@ -17,6 +17,20 @@ export const createOrder = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.CREATED).json(response);
 };
 
+export const codOrder = async (req: Request, res: Response) => {
+  const user = req.user;
+  const { itemId, quantity = 1 } = req.body;
+  let response;
+  if (itemId && quantity) {
+    const data = { user, itemId, quantity };
+    response = await services.buySingleItemCOD(data);
+  } else {
+    const data = { user };
+    response = await services.buyItemFromCartCOD(data);
+  }
+  res.status(httpStatusCodes.CREATED).json(response);
+};
+
 export const fetchOrders = async (req: Request, res: Response) => {
   const userId = req.user._id;
   const response = await services.fetchOrders(userId);

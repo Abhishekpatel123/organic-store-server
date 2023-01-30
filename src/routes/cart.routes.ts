@@ -9,6 +9,9 @@ const router = express.Router();
 // - Get cart details
 router.get("/", authenticate, tryCatch(controllers.fetchCart));
 
+// - billing
+router.get("/bill", authenticate, tryCatch(controllers.getBilling));
+
 // - Add product or item into cart
 router.post(
   "/add",

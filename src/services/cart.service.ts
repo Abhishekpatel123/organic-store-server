@@ -1,14 +1,38 @@
 import { Types } from "mongoose";
 import { CartModel, ProductModel } from "../database/models";
+import { ExtendedCartItemInterface } from "../database/models/CartModel";
 import { ProductInterface } from "../database/models/ProductModel";
 import { UserInterface } from "../database/models/UserModel";
 import BaseError from "../errors/base-error";
 
-
-
 export const fetchCart = async (userId: UserInterface["_id"]) => {
   const cart = await CartModel.findOne({ userId }).populate("items.itemId");
   return { cart, message: "Cart fetched successfully." };
+};
+
+export const getBilling = async (userId: UserInterface["_id"]) => {
+  const cart = await CartModel.findOne({ userId }).populate<{
+    items: ExtendedCartItemInterface[];
+  }>("items.itemId");
+  if(!cart) throw BaseError.notFound("Cart not found");
+  const totalAmount = cart?.bill;
+  const totalDiscount = cart?.items.reduce((prev: number, curr) => {
+    const quantity = curr.quantity;
+    const { discount, basePrice } = curr.itemId.pricing;
+    return basePrice * (discount / 100);
+  }, 0);
+  console.log(totalDiscount);
+  const addresses = await cart?.items.map((item) => {});
+  // total amount, discount, delivary charge, price
+  return {
+    bill: {
+      totalAmount,
+      noOfItems: cart?.items.length,
+      totalDiscount,
+      deliveryCharges: cart?.bill > 1000 ? "40" : "Free ",
+    },
+    message: "Cart fetched successfully.",
+  };
 };
 
 export const addItemIntoCart = async (
@@ -40,7 +64,8 @@ export const addItemIntoCart = async (
   // - If product or item already exist
   if (itemIndex > -1) {
     let item = cart.items[itemIndex];
-    item.quantity += quantity;
+    // item.quantity += quantity;
+    item.quantity = quantity;
 
     cart.bill = cart.items.reduce(
       (acc, curr) => acc + curr.quantity * curr.basePrice,
@@ -65,7 +90,6 @@ export const addItemIntoCart = async (
   const savedCart = await cart.save();
   return { cart: savedCart, message: "Successfully Item or Product Added" };
 };
-
 
 export const removeCartItem = async (
   userId: UserInterface["_id"],

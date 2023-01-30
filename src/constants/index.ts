@@ -6,6 +6,11 @@ const status = {
   failed: "FAILED",
 };
 
+const paymentType = {
+  cod: "Cash On Delivery",
+  online: "Online",
+};
+
 export default {
   OTP_LENGTH: 6,
   httpStatusCodes,
@@ -14,4 +19,5 @@ export default {
     DOLLAR: "USD",
   },
   status,
+  paymentType
 };

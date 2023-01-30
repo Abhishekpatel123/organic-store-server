@@ -45,33 +45,43 @@ export const buySingleItem = async ({
   const metadata = {
     userId: user._id.toString(),
     productId: null,
-    cartId: null,
+    quantity,
   };
 
   const { url } = await makePayment({
     items: [{ ...product, quantity }],
     metadata,
-    email: user.email,
   });
   return { url, message: "Successfully created the url." };
+};
 
-  // const shippingAddress = user.addresses.find(
-  //   (address) => address.isShippingAddress === true
-  // );
+// Buying single product not form the cart
+export const buySingleItemCOD = async ({
+  itemId,
+  quantity,
+  user,
+}: {
+  itemId: ProductInterface["_id"];
+  quantity: number;
+  user: UserInterface;
+}) => {
+  const product = await ProductModel.findOne({ _id: itemId });
+  if (!product) return { message: "Product not exist." };
+  const shippingAddress = user.addresses.find(
+    (address) => address.isShippingAddress === true
+  );
 
-  // if (!shippingAddress)
-  //   throw BaseError.notFound("Please select shipping address.");
+  const order = await OrderModel.create({
+    userId: user._id,
+    paymentStatus: constants.status.pending,
+    status: constants.status.pending,
+    shippingAddress,
+    bill: product.pricing.basePrice,
+    items: [{ ...product, quantity }],
+    paymentType: constants.paymentType.cod,
+  });
 
-  // - Payment gateway will integrate in future
-  // - After payment successfully done
-  // const order = await OrderModel.create({
-  //   userId: user._id,
-  //   paymentStatus: constants.status.pending,
-  //   status: "PENDING",
-  //   bill: product.pricing.basePrice,
-  //   items: [{ ...product, quantity }],
-  //   shippingAddress,
-  // });
+  return { order, message: "Order payment successfully completed." };
 };
 
 // Buying products form cart
@@ -106,28 +116,54 @@ export const buyItemFromCart = async ({ user }: { user: UserInterface }) => {
   const metadata = {
     userId: user._id.toString(),
     productId: null,
-    cartId: cart._id.toString(),
   };
 
   // - Payment gateway will integrate in future
-  const { url } = await makePayment({ metadata, items, email: user.email });
+  const { url } = await makePayment({ metadata, items });
   return { url, message: "Item order successfully" };
+};
 
-  // const shippingAddress = user.addresses.find(
-  //   (address) => address.isShippingAddress === true
-  // );
+// Buying products form cart
+export const buyItemFromCartCOD = async ({ user }: { user: UserInterface }) => {
+  const cart = await CartModel.findOne({ userId: user._id })
+    .populate<{
+      items: ExtendedCartItemInterface[];
+    }>("items.itemId")
+    .select("-items.basePrice");
+  if (!cart || cart.items?.length === 0)
+    throw BaseError.notFound("Cart items Not found.");
 
-  // -
-  // const order = await OrderModel.create({
-  //   userId: user._id,
-  //   paymentStatus: constants.status.pending,
-  //   status: "PENDING",
-  //   bill: cart.bill,
-  //   items,
-  //   shippingAddress,
-  // });
+  const items: OrderItemInterface[] = [];
 
-  // deleting items from cart
-  // cart.items = [];
-  // await cart.save();
+  cart.items.forEach((item) =>
+    items.push({
+      sku: item.itemId.sku,
+      name: item.itemId.name,
+      title: item.itemId.title,
+      description: item.itemId.description,
+      avgRating: item.itemId.avgRating,
+      ratingCount: item.itemId.ratingCount,
+      ratingValue: item.itemId.ratingValue,
+      manufacture_details: item.itemId.manufacture_details,
+      pricing: item.itemId.pricing,
+      imageUrl: item.itemId.imageUrl,
+      category: item.itemId.category,
+      quantity: item.quantity,
+    })
+  );
+
+  const shippingAddress = user.addresses.find(
+    (address) => address.isShippingAddress === true
+  );
+
+  const order = await OrderModel.create({
+    userId: user?._id,
+    paymentStatus: constants.status.pending,
+    status: constants.status.pending,
+    items,
+    bill: cart.bill,
+    shippingAddress,
+    paymentType: constants.paymentType.cod,
+  });
+  return { order, message: "Order payment successfully completed." };
 };
