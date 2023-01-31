@@ -28,3 +28,12 @@ export const removeCartItem = async (req: Request, res: Response) => {
   const response = await services.removeCartItem(userId, itemId);
   res.status(httpStatusCodes.OK).json(response);
 };
+
+export const fetchItem = async (req: Request, res: Response) => {
+  const { itemId } = req.params;
+  const response = await services.fetchItemById({
+    itemId,
+    userId: req.user._id.toString(),
+  });
+  res.status(httpStatusCodes.OK).json(response);
+};

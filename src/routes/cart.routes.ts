@@ -28,4 +28,10 @@ router.delete(
   tryCatch(controllers.removeCartItem)
 );
 
+router.get(
+  "/:itemId",
+  authenticate,
+  tryCatch(controllers.fetchItem)
+);
+
 export default router;

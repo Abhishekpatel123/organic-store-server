@@ -14,7 +14,7 @@ export const getBilling = async (userId: UserInterface["_id"]) => {
   const cart = await CartModel.findOne({ userId }).populate<{
     items: ExtendedCartItemInterface[];
   }>("items.itemId");
-  if(!cart) throw BaseError.notFound("Cart not found");
+  if (!cart) throw BaseError.notFound("Cart not found");
   const totalAmount = cart?.bill;
   const totalDiscount = cart?.items.reduce((prev: number, curr) => {
     const quantity = curr.quantity;
@@ -113,4 +113,20 @@ export const removeCartItem = async (
     return { cart: updatedCart, message: "Cart removed successfully" };
   }
   throw BaseError.notFound("Item or Product is not present");
+};
+
+export const fetchItemById = async ({
+  itemId,
+  userId,
+}: {
+  itemId: string;
+  userId: string;
+}) => {
+  const cart = await CartModel.findOne({ userId }).populate<{
+    items: ExtendedCartItemInterface[];
+  }>("items.itemId");
+  if (!cart) throw BaseError.notFound("Cart is not found.");
+  const item = cart.items.find((item) => item.itemId._id.toString() === itemId);
+  if (!item) throw BaseError.badRequest("Item of this id is not in cart.");
+  return { item };
 };
