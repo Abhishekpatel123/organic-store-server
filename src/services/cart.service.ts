@@ -10,31 +10,6 @@ export const fetchCart = async (userId: UserInterface["_id"]) => {
   return { cart, message: "Cart fetched successfully." };
 };
 
-export const getBilling = async (userId: UserInterface["_id"]) => {
-  const cart = await CartModel.findOne({ userId }).populate<{
-    items: ExtendedCartItemInterface[];
-  }>("items.itemId");
-  if (!cart) throw BaseError.notFound("Cart not found");
-  const totalAmount = cart?.bill;
-  const totalDiscount = cart?.items.reduce((prev: number, curr) => {
-    const quantity = curr.quantity;
-    const { discount, basePrice } = curr.itemId.pricing;
-    return basePrice * (discount / 100);
-  }, 0);
-  console.log(totalDiscount);
-  const addresses = await cart?.items.map((item) => {});
-  // total amount, discount, delivary charge, price
-  return {
-    bill: {
-      totalAmount,
-      noOfItems: cart?.items.length,
-      totalDiscount,
-      deliveryCharges: cart?.bill > 1000 ? "40" : "Free ",
-    },
-    message: "Cart fetched successfully.",
-  };
-};
-
 export const addItemIntoCart = async (
   userId: UserInterface["_id"],
   itemId: ProductInterface["_id"],
@@ -128,5 +103,37 @@ export const fetchItemById = async ({
   if (!cart) throw BaseError.notFound("Cart is not found.");
   const item = cart.items.find((item) => item.itemId._id.toString() === itemId);
   if (!item) throw BaseError.badRequest("Item of this id is not in cart.");
-  return { item };
+
+  const totalDiscount = item.basePrice * (item.itemId.pricing.discount / 100);
+  const totalAmount = item.basePrice * item.quantity;
+  const bill = {
+    totalAmount,
+    noOfItems: 1,
+    totalDiscount,
+    deliveryCharges: totalAmount > 1000 ? "40" : "Free ",
+    payableAmount: totalAmount - totalDiscount,
+  };
+  return { item, bill };
+};
+
+export const getBilling = async (userId: UserInterface["_id"]) => {
+  const cart = await CartModel.findOne({ userId }).populate<{
+    items: ExtendedCartItemInterface[];
+  }>("items.itemId");
+  if (!cart) throw BaseError.notFound("Cart not found");
+  const totalAmount = cart?.bill;
+  const totalDiscount = cart?.items.reduce((prev: number, curr) => {
+    const { discount, basePrice } = curr.itemId.pricing;
+    return basePrice * (discount / 100);
+  }, 0);
+  return {
+    bill: {
+      totalAmount,
+      noOfItems: cart?.items.length,
+      totalDiscount,
+      deliveryCharges: cart?.bill > 1000 ? "40" : "Free ",
+      payableAmount: totalAmount - totalDiscount,
+    },
+    message: "Cart fetched successfully.",
+  };
 };
