@@ -10,17 +10,21 @@ export const fetchCart = async (userId: UserInterface["_id"]) => {
   return { cart, message: "Cart fetched successfully." };
 };
 
+interface CartItemPopulateInterface {
+  items: ExtendedCartItemInterface[];
+}
+
 export const addItemIntoCart = async (
   userId: UserInterface["_id"],
   itemId: ProductInterface["_id"],
   quantity: number
 ) => {
   const cart = await CartModel.findOne({ userId });
+
   const product = await ProductModel.findOne({ _id: itemId });
-  // - If product is not exist or deleted
   if (!product) throw BaseError.notFound("Product not found");
 
-  // - If cart not exist then create one
+  // - IF CART NOT EXIST
   if (!cart) {
     const newCart = await CartModel.create({
       userId,
@@ -29,17 +33,19 @@ export const addItemIntoCart = async (
       ],
       bill: quantity * product.pricing.basePrice, // = product.pricing.basePrice
     });
-    return { cart: newCart, message: "Cart item updated successfully." };
+
+    return {
+      itemId: newCart.items[0].itemId._id,
+      message: "Cart item updated successfully.",
+    };
   }
 
-  // - If cart already exist
   const itemIndex = cart.items.findIndex(
     (item) => item.itemId.toString() === itemId
   );
-  // - If product or item already exist
+  // - IF CART ITEM EXIST ALREADY
   if (itemIndex > -1) {
     let item = cart.items[itemIndex];
-    // item.quantity += quantity;
     item.quantity = quantity;
 
     cart.bill = cart.items.reduce(
@@ -48,8 +54,12 @@ export const addItemIntoCart = async (
     );
 
     cart.items[itemIndex] = item;
-    const savedCart = await cart.save();
-    return { cart: savedCart, message: "Successfully Item or Product Added" };
+    await cart.save();
+
+    return {
+      itemId: cart.items[itemIndex].itemId._id,
+      message: "Successfully Item or Product Added ldfjsl",
+    };
   }
   // - If item already not exist
   cart.items.push({
@@ -62,8 +72,11 @@ export const addItemIntoCart = async (
     return acc + curr.quantity * curr.basePrice;
   }, 0);
 
-  const savedCart = await cart.save();
-  return { cart: savedCart, message: "Successfully Item or Product Added" };
+  await cart.save();
+  return {
+    itemId: cart.items[itemIndex].itemId._id,
+    message: "Successfully Item or Product Added",
+  };
 };
 
 export const removeCartItem = async (
