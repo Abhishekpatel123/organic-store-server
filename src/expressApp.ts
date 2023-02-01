@@ -2,6 +2,7 @@ import * as express from "express";
 import * as cors from "cors";
 import { errorHandler } from "./middleware";
 import {
+  addressRoutes,
   cartRoutes,
   categoryRoutes,
   orderRoutes,
@@ -29,6 +30,7 @@ export default (app: express.Application) => {
 
   // - Routings
   app.use("/api/v1/users", userRoutes);
+  app.use("/api/v1/addresses", addressRoutes);
   app.use("/api/v1/categories", categoryRoutes);
   app.use("/api/v1/products", productRoutes);
   app.use("/api/v1/carts", cartRoutes);

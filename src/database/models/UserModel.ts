@@ -17,7 +17,7 @@ export interface AddressInterface {
   landmark: string;
   alternativePhone: string;
   addressType: "Home" | "Work";
-  isShippingAddress: boolean;
+  // isShippingAddress: boolean;
 }
 
 export interface UserInterface extends Document {
@@ -28,6 +28,7 @@ export interface UserInterface extends Document {
   otp: string;
   verify: boolean;
   addresses: Types.Array<AddressInterface>;
+  shippingAddressId: string;
   tokens: Types.Array<TokenInterface>;
 }
 
@@ -50,9 +51,10 @@ const userSchema = new Schema<UserInterface>({
       landmark: String,
       alternativePhone: String,
       addressType: { type: String, required: true },
-      isShippingAddress: { type: Boolean, default: false },
+      // isShippingAddress: { type: Boolean, default: false },
     },
   ],
+  shippingAddressId: String,
   tokens: [{ token: String }],
 });
 

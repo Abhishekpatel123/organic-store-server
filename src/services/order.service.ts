@@ -68,7 +68,7 @@ export const buySingleItemCOD = async ({
   const product = await ProductModel.findOne({ _id: itemId });
   if (!product) return { message: "Product not exist." };
   const shippingAddress = user.addresses.find(
-    (address) => address.isShippingAddress === true
+    (address) => address._id.toString() === user.shippingAddressId
   );
 
   const order = await OrderModel.create({
@@ -153,7 +153,7 @@ export const buyItemFromCartCOD = async ({ user }: { user: UserInterface }) => {
   );
 
   const shippingAddress = user.addresses.find(
-    (address) => address.isShippingAddress === true
+    (address) => address._id.toString() === user.shippingAddressId
   );
 
   const order = await OrderModel.create({

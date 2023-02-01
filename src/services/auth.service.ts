@@ -1,4 +1,3 @@
-import { Request } from "express";
 import { UserModel } from "../database/models";
 import { UserInterface, AddressInterface } from "../database/models/UserModel";
 import BaseError from "../errors/base-error";
@@ -41,22 +40,3 @@ export const otpVerify = async (
   return { user, token, message: "Successfully !" };
 };
 
-export const makeShippingAddress = async (req: Request, addressId: string) => {
-  const previousAddresses = req.user.addresses;
-  let isOneAddressModified = false;
-  const addresses = req.user.addresses.map((address) => {
-    if (address._id.toString() === addressId) {
-      isOneAddressModified = true;
-      return { ...address, isShippingAddress: true };
-    }
-    return { ...address, isShippingAddress: false };
-  });
-  req.user.set(
-    "addresses",
-    isOneAddressModified ? addresses : previousAddresses
-  );
-  await req.user.save();
-  return {
-    message: "Successfully make this address to shipping address.",
-  };
-};

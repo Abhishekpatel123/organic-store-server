@@ -19,7 +19,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
     if (!user) throw BaseError.notFound("User not found.");
 
     const shippingAddress = user.addresses.find(
-      (address) => address.isShippingAddress === true
+      (address) => address._id.toString() === user.shippingAddressId
     );
 
     let order;
