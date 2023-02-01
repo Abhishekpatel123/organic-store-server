@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from "uuid";
 import { CategoryModel, ProductModel } from "../database/models";
 import { ProductInterface } from "../database/models/ProductModel";
 import BaseError from "../errors/base-error";
-import * as utils from "../utils";
 
 export const createProduct = async (data: ProductInterface) => {
   const sku = `${data.category}-${uuidv4()}`;

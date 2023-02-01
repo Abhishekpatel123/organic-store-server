@@ -3,21 +3,16 @@ import * as validation from "../validations/product.validation";
 import * as controllers from "../controllers/product.controller";
 import { tryCatch } from "../middleware";
 
-
 const router = express.Router();
 
 // - Admin Authorization will do later
 
 // - Create Product
-router.post(
-  "/create",
-  validation.createProduct,
-  tryCatch(controllers.createProduct)
-);
+router.post("/", validation.createProduct, tryCatch(controllers.createProduct));
 
 // - Delete Product
 router.delete(
-  "/delete",
+  "/",
   validation.removeProduct,
   tryCatch(controllers.removeProduct)
 );
@@ -26,12 +21,12 @@ router.delete(
 router.get("/by-category/:categoryName", tryCatch(controllers.fetchProducts));
 
 // - Get single product by Id
-router.get("/id/:sku", tryCatch(controllers.fetchProduct));
+router.get("/by-sku/:sku", tryCatch(controllers.fetchProduct));
 
-// - Top rated product 
+// - Top rated product
 router.get("/top-rated", tryCatch(controllers.topRatedProduct));
 
-// - Top rated product 
+// - Top rated product
 router.get("/latest", tryCatch(controllers.latestProduct));
 
 // // - Update Product
