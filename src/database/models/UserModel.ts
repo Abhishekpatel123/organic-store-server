@@ -32,31 +32,44 @@ export interface UserInterface extends Document {
   tokens: Types.Array<TokenInterface>;
 }
 
-const userSchema = new Schema<UserInterface>({
-  name: String,
-  email: { type: String, unique: true, required: true },
-  phone: { type: String, unique: true },
-  otp: String,
-  verify: { type: Boolean, default: false },
-  addresses: [
-    {
-      name: { type: String, required: true },
-      phone: { type: String, required: true },
-      pinCode: { type: Number, required: true },
-      locality: { type: String, required: true },
-      areaAndStreet: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      // optional
-      landmark: String,
-      alternativePhone: String,
-      addressType: { type: String, required: true },
-      // isShippingAddress: { type: Boolean, default: false },
+const userSchema = new Schema<UserInterface>(
+  {
+    name: String,
+    email: { type: String, unique: true, required: true },
+    phone: { type: String, unique: true },
+    otp: String,
+    verify: { type: Boolean, default: false },
+    addresses: [
+      {
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        pinCode: { type: Number, required: true },
+        locality: { type: String, required: true },
+        areaAndStreet: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
+        // optional
+        landmark: String,
+        alternativePhone: String,
+        addressType: { type: String, required: true },
+        // isShippingAddress: { type: Boolean, default: false },
+      },
+    ],
+    shippingAddressId: String,
+    tokens: [{ token: String }],
+  },
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.tokens;
+        delete ret.__v;
+        delete ret.otp;
+        return ret;
+      },
     },
-  ],
-  shippingAddressId: String,
-  tokens: [{ token: String }],
-});
+  }
+);
 
 const UserModel = model<UserInterface>(
   config.mongoConfig.collections.USERS,
