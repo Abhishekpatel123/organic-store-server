@@ -40,3 +40,18 @@ export const otpVerify = async (
   return { user, token, message: "Successfully !" };
 };
 
+interface UpdateUserInterface {
+  userId: string;
+  data: {
+    name?: string;
+    phone?: string;
+  };
+}
+export const updateUser = async ({ userId, data }: UpdateUserInterface) => {
+  const user = await UserModel.findOneAndUpdate(
+    { _id: userId },
+    { ...data },
+    { new: true }
+  );
+  return { user, message: "Successfully !" };
+};

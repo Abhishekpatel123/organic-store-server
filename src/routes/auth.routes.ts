@@ -23,4 +23,11 @@ router.post(
 // get user details
 router.get("/", authenticate, tryCatch(controller.getUser));
 
+// - UPDATE USER
+router.patch(
+  "/",
+  authenticate,
+  validation.updateUser,
+  tryCatch(controller.updateUser)
+);
 export default router;

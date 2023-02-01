@@ -35,3 +35,17 @@ export const otpVerify = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
+// - Update user
+export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+  const data = req.body;
+
+  const schema = Joi.object({
+    name: Joi.string(),
+    phone: Joi.string().length(10),
+  });
+
+  const { error } = schema.validate(data);
+  if (error) return next(error);
+  console.log("- Validation Done");
+  next();
+};

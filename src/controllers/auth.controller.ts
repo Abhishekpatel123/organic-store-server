@@ -18,3 +18,12 @@ export const getUser = (req: Request, res: Response) => {
   const data = req.user;
   res.status(httpStatusCodes.OK).json({ user: data });
 };
+
+export const updateUser = async (req: Request, res: Response) => {
+  const data = req.body;
+  const response = await services.updateUser({
+    userId: req.user._id.toString(),
+    data,
+  });
+  res.status(httpStatusCodes.OK).json(response);
+};
