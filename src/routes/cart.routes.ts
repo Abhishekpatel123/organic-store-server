@@ -14,7 +14,7 @@ router.get("/bill", authenticate, tryCatch(controllers.getBilling));
 
 // - Add product or item into cart
 router.post(
-  "/add",
+  "/items",
   authenticate,
   validation.addItemIntoCart,
   tryCatch(controllers.addItemIntoCart)
@@ -22,16 +22,13 @@ router.post(
 
 // - Remove item from cart
 router.delete(
-  "/delete",
+  "/items",
   authenticate,
   validation.removeCartItem,
   tryCatch(controllers.removeCartItem)
 );
 
-router.get(
-  "/:itemId",
-  authenticate,
-  tryCatch(controllers.fetchItem)
-);
+// - FETCH ITEM BY ITEM ID
+router.get("/items/:itemId", authenticate, tryCatch(controllers.fetchItem));
 
 export default router;
