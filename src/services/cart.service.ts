@@ -42,7 +42,7 @@ export const addItemIntoCart = async (
 
   // - IF CART EXIST
   const itemIndex = cart.items.findIndex(
-    (item) => item.itemId.toString() === itemId
+    (item) => item.itemId.toString() === itemId.toString()
   );
   // - IF CART ITEM EXIST ALREADY
   if (itemIndex > -1) {
@@ -62,7 +62,7 @@ export const addItemIntoCart = async (
       message: "Successfully Item or Product Added ldfjsl",
     };
   }
-  
+
   // - If item already not exist
   cart.items.push({
     itemId: product._id,
@@ -89,7 +89,7 @@ export const removeCartItem = async (
   if (!cart) throw BaseError.notFound("Cart is not found or No item in cart");
 
   const itemIndex = cart.items.findIndex(
-    (item) => item.itemId.toString() === itemId
+    (item) => item.itemId.toString() === itemId.toString()
   );
   //   if item or product is present
   if (itemIndex > -1) {

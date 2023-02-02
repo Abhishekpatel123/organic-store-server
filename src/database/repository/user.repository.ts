@@ -7,7 +7,7 @@ interface CrateUserInterface {
   otp?: string;
 }
 
-interface QueryInterface {
+interface FilterInterface {
   _id?: string;
   email?: string;
 }
@@ -16,8 +16,8 @@ interface UpdateInterface {
   otp: string;
 }
 
-const authRepository = {
-  FindUser: async (query: QueryInterface) => {
+const userRepository = {
+  findOne: async (query: FilterInterface) => {
     try {
       const user = await UserModel.findOne(query);
       return user;
@@ -25,7 +25,7 @@ const authRepository = {
       throw BaseError.internalServer(err.message);
     }
   },
-  CreateUser: async (data: CrateUserInterface) => {
+  create: async (data: CrateUserInterface) => {
     try {
       const user = await UserModel.create(data);
       return user;
@@ -34,7 +34,7 @@ const authRepository = {
     }
   },
 
-  UpdateUser: async (query: QueryInterface, update: UpdateInterface) => {
+  updateOne: async (query: FilterInterface, update: UpdateInterface) => {
     try {
       const user = await UserModel.updateOne(query, update);
       return user;
@@ -44,4 +44,4 @@ const authRepository = {
   },
 };
 
-export default authRepository;
+export default userRepository;

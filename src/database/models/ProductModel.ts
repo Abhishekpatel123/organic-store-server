@@ -8,6 +8,7 @@ export interface PricingInterface {
 }
 
 export interface ProductInterface {
+  _id: Schema.Types.ObjectId;
   sku: string;
   name: string;
   title: string;
