@@ -14,10 +14,13 @@ const paymentType = {
 export default {
   OTP_LENGTH: 6,
   httpStatusCodes,
+  minForFreeDelivery: 1000,
+  deliveryCharges: 40,
+  deliveryFree: "FREE",
   currencies: {
     RUPEE: "INR",
     DOLLAR: "USD",
   },
   status,
-  paymentType
+  paymentType,
 };

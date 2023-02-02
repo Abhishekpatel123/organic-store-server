@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import constants from "../constants";
 import { CartModel, ProductModel } from "../database/models";
 import { ExtendedCartItemInterface } from "../database/models/CartModel";
 import { ProductInterface } from "../database/models/ProductModel";
@@ -19,11 +20,10 @@ export const addItemIntoCart = async (
   itemId: ProductInterface["_id"],
   quantity: number
 ) => {
-  const cart = await CartModel.findOne({ userId });
-
   const product = await ProductModel.findOne({ _id: itemId });
   if (!product) throw BaseError.notFound("Product not found");
 
+  const cart = await CartModel.findOne({ userId });
   // - IF CART NOT EXIST
   if (!cart) {
     const newCart = await CartModel.create({
@@ -40,6 +40,7 @@ export const addItemIntoCart = async (
     };
   }
 
+  // - IF CART EXIST
   const itemIndex = cart.items.findIndex(
     (item) => item.itemId.toString() === itemId
   );
@@ -61,6 +62,7 @@ export const addItemIntoCart = async (
       message: "Successfully Item or Product Added ldfjsl",
     };
   }
+  
   // - If item already not exist
   cart.items.push({
     itemId: product._id,
@@ -85,6 +87,7 @@ export const removeCartItem = async (
 ) => {
   const cart = await CartModel.findOne({ userId });
   if (!cart) throw BaseError.notFound("Cart is not found or No item in cart");
+
   const itemIndex = cart.items.findIndex(
     (item) => item.itemId.toString() === itemId
   );
@@ -94,9 +97,6 @@ export const removeCartItem = async (
     cart.bill -= item.quantity * item.basePrice;
     if (cart.bill < 0) cart.bill = 0;
     cart.items.splice(itemIndex, 1);
-    // cart.bill = cart.items.reduce((acc, curr) => {
-    //   return acc + curr.quantity * curr.pricing.basePrice;
-    // }, 0);
     const updatedCart = await cart.save();
     return { cart: updatedCart, message: "Cart removed successfully" };
   }
@@ -104,7 +104,7 @@ export const removeCartItem = async (
 };
 
 export const fetchItemById = async ({
-  itemId,
+  itemId, // here item id is not product id it is _id in items object
   userId,
 }: {
   itemId: string;
@@ -114,6 +114,7 @@ export const fetchItemById = async ({
     items: ExtendedCartItemInterface[];
   }>("items.itemId");
   if (!cart) throw BaseError.notFound("Cart is not found.");
+
   const item = cart.items.find((item) => item.itemId._id.toString() === itemId);
   if (!item) throw BaseError.badRequest("Item of this id is not in cart.");
 
@@ -134,17 +135,24 @@ export const getBilling = async (userId: UserInterface["_id"]) => {
     items: ExtendedCartItemInterface[];
   }>("items.itemId");
   if (!cart) throw BaseError.notFound("Cart not found");
+
   const totalAmount = cart?.bill;
   const totalDiscount = cart?.items.reduce((prev: number, curr) => {
     const { discount, basePrice } = curr.itemId.pricing;
     return basePrice * (discount / 100);
   }, 0);
+
+  const deliveryCharges =
+    cart?.bill > constants.minForFreeDelivery
+      ? constants.deliveryCharges
+      : constants.deliveryFree;
+
   return {
     bill: {
       totalAmount,
       noOfItems: cart?.items.length,
       totalDiscount,
-      deliveryCharges: cart?.bill > 1000 ? "40" : "Free ",
+      deliveryCharges,
       payableAmount: totalAmount - totalDiscount,
     },
     message: "Cart fetched successfully.",
