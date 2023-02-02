@@ -7,7 +7,7 @@ export interface PricingInterface {
   discount: number;
 }
 
-export interface ProductInterface extends Document {
+export interface ProductInterface {
   sku: string;
   name: string;
   title: string;
@@ -22,7 +22,7 @@ export interface ProductInterface extends Document {
   category: any;
 }
 
-const productSchema = new Schema<ProductInterface>(
+const productSchema = new Schema<ProductInterface & Document>(
   {
     // sku can be multiple will do this later if needed
     // like if the product is book  paperback (sku 837423) and hardcover (sku 83749385)
@@ -54,7 +54,7 @@ const productSchema = new Schema<ProductInterface>(
   { timestamps: true }
 );
 
-const ProductModel = model<ProductInterface>(
+const ProductModel = model<ProductInterface & Document>(
   config.mongoConfig.collections.PRODUCTS,
   productSchema
 );
