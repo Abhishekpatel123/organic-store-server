@@ -1,5 +1,5 @@
-import { Schema, model, Document, Types } from "mongoose";
-import config from "../../config";
+import { Schema, model, Document, Types } from 'mongoose';
+import config from '../../config';
 
 export interface PricingInterface {
   basePrice: number;
@@ -19,6 +19,7 @@ export interface ProductInterface {
   manufacture_details: any;
   pricing: PricingInterface;
   imageUrl: string;
+  images: [{ imageUrl: string }];
   countInStock: number;
   category: any;
 }
@@ -38,17 +39,17 @@ const productSchema = new Schema<ProductInterface & Document>(
     category: {
       type: Schema.Types.ObjectId,
       ref: config.mongoConfig.collections.CATEGORIES,
-      required: true,
+      required: true
     },
     manufacture_details: Object,
     pricing: {
       basePrice: Number,
       currency: String,
-      discount: Number,
+      discount: Number
     },
-    imageUrl: String,
+    imageUrl: { type: String, required: true },
     countInStock: { type: Number, required: true },
-    // images: [{ imageUrl: String, color: String }],
+    images: [{ imageUrl: String }]
     // rating comment will include latter
     // offer will include later version
   },

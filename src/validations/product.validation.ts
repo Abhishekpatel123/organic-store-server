@@ -1,20 +1,20 @@
-import { Request, Response, NextFunction } from "express";
-import * as Joi from "joi";
+import { Request, Response, NextFunction } from 'express';
+import * as Joi from 'joi';
 
 const productCommonSchema = Joi.object({
-  sku: Joi.string().required(),
   name: Joi.string().required(),
   title: Joi.string().required(),
   description: Joi.string().required(),
-  manufacture_details: Joi.object(),
+  manufacture_details: Joi.object().keys().max(5),
   pricing: Joi.object({
     basePrice: Joi.number().required(),
     currency: Joi.string().required(),
-    discount: Joi.number().required(),
+    discount: Joi.number().required()
   }).required(),
   imageUrl: Joi.string(),
+  images: Joi.array(),
   countInStock: Joi.number().required(),
-  category: Joi.string().required(),
+  category: Joi.string().required()
 });
 
 // - Create Product
@@ -28,7 +28,7 @@ export const createProduct = (
 
   const { error } = schema.validate(data);
   if (error) return res.status(404).send(error.message);
-  console.log("- Validation Done");
+  console.log('- Validation Done');
   next();
 };
 
@@ -42,13 +42,13 @@ export const updateProduct = (
 
   const schema = productCommonSchema.concat(
     Joi.object({
-      _id: Joi.string().required(),
+      _id: Joi.string().required()
     })
   );
 
   const { error } = schema.validate(data);
   if (error) return res.status(404).send(error.message);
-  console.log("- Validation Done");
+  console.log('- Validation Done');
   next();
 };
 
@@ -64,11 +64,10 @@ export const removeProduct = (
 
   const { error } = schema.validate(data);
   if (error) return res.status(404).send(error.message);
-  console.log("- Validation Done");
+  console.log('- Validation Done');
   next();
 };
 
 // - Fetch Products by category
 // - Fetch single Product
 // params does not need validation
-
