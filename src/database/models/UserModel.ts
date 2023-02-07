@@ -1,5 +1,5 @@
-import { Schema, model, Document, Types } from "mongoose";
-import config from "../../config";
+import { Schema, model, Document, Types } from 'mongoose';
+import config from '../../config';
 
 interface TokenInterface {
   token: string;
@@ -16,7 +16,7 @@ export interface AddressInterface {
   state: string;
   landmark: string;
   alternativePhone: string;
-  addressType: "Home" | "Work";
+  addressType: 'Home' | 'Work';
   // isShippingAddress: boolean;
 }
 
@@ -36,7 +36,7 @@ const userSchema = new Schema<UserInterface>(
   {
     name: String,
     email: { type: String, unique: true, required: true },
-    phone: { type: String, unique: true },
+    phone: { type: String },
     otp: String,
     verify: { type: Boolean, default: false },
     addresses: [
@@ -51,12 +51,12 @@ const userSchema = new Schema<UserInterface>(
         // optional
         landmark: String,
         alternativePhone: String,
-        addressType: { type: String, required: true },
+        addressType: { type: String, required: true }
         // isShippingAddress: { type: Boolean, default: false },
-      },
+      }
     ],
     shippingAddressId: String,
-    tokens: [{ token: String }],
+    tokens: [{ token: String }]
   },
   {
     timestamps: true,
@@ -66,8 +66,8 @@ const userSchema = new Schema<UserInterface>(
         delete ret.__v;
         delete ret.otp;
         return ret;
-      },
-    },
+      }
+    }
   }
 );
 

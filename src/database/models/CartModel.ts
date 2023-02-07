@@ -1,6 +1,6 @@
-import { Schema, model, Document, Types } from "mongoose";
-import config from "../../config";
-import { ProductInterface } from "./ProductModel";
+import { Schema, model, Document, Types } from 'mongoose';
+import config from '../../config';
+import { ProductInterface } from './ProductModel';
 
 export interface CartItemInterface {
   itemId: Types.ObjectId;
@@ -27,16 +27,15 @@ const cartSchema = new Schema<CartInterface>({
       itemId: {
         type: Schema.Types.ObjectId,
         ref: config.mongoConfig.collections.PRODUCTS,
-        unique: true,
-        required: true,
+        required: true
       },
       // same price which is of product
       basePrice: { type: Number, required: true },
       // no of product of same
-      quantity: { type: Number, required: true },
-    },
+      quantity: { type: Number, required: true }
+    }
   ],
-  bill: { type: Number, required: true, default: 0 },
+  bill: { type: Number, required: true, default: 0 }
 });
 
 const CartModel = model<CartInterface>(
