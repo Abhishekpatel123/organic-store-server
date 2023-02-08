@@ -1,14 +1,14 @@
-import constants from "../constants";
+import constants from '../constants';
 import {
   CartModel,
   OrderModel,
   ProductModel,
-  UserModel,
-} from "../database/models";
-import { ExtendedCartItemInterface } from "../database/models/CartModel";
-import { OrderItemInterface } from "../database/models/OrderModel";
-import BaseError from "../errors/base-error";
-import { stripe } from "../utils/stripe.utils";
+  UserModel
+} from '../database/models';
+import { ExtendedCartItemInterface } from '../database/models/CartModel';
+import { OrderItemInterface } from '../database/models/OrderModel';
+import BaseError from '../errors/base-error';
+import { stripe } from '../utils/stripe.utils';
 
 export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
   const customer = await stripe.customers.retrieve(paymentIntent?.customer);
@@ -16,7 +16,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
   } else {
     const { userId, productId, quantity } = customer.metadata;
     const user = await UserModel.findOne({ _id: userId });
-    if (!user) throw BaseError.notFound("User not found.");
+    if (!user) throw BaseError.notFound('User not found.');
 
     const shippingAddress = user.addresses.find(
       (address) => address._id.toString() === user.shippingAddressId
@@ -26,7 +26,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
     // if u have bought product not form the cart
     if (productId) {
       const product = await ProductModel.findOne({ _id: productId });
-      if (!product) throw BaseError.notFound("Product not found.");
+      if (!product) throw BaseError.notFound('Product not found.');
       order = await OrderModel.create({
         userId,
         customerId: paymentIntent.customer,
@@ -36,21 +36,21 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
         shippingAddress,
         bill: product.pricing.basePrice,
         items: [{ ...product, quantity: quantity }],
-        paymentType: constants.paymentType.online,
+        paymentType: constants.paymentType.online
       });
 
-      return { order, message: "Order payment successfully completed." };
+      return { order, message: 'Order payment successfully completed.' };
     }
 
     // if you have bought product form the cart
     const cart = await CartModel.findOne({ userId })
       .populate<{
         items: ExtendedCartItemInterface[];
-      }>("items.itemId")
-      .select("-items.basePrice");
-    if (!cart) throw BaseError.notFound("Cart not found.");
+      }>('items.itemId')
+      .select('-items.basePrice');
+    if (!cart) throw BaseError.notFound('Cart not found.');
     if (cart.items.length === 0)
-      throw BaseError.notFound("Cart item not found.");
+      throw BaseError.notFound('Cart item not found.');
 
     const items: OrderItemInterface[] = [];
 
@@ -67,7 +67,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
         pricing: item.itemId.pricing,
         imageUrl: item.itemId.imageUrl,
         category: item.itemId.category,
-        quantity: item.quantity,
+        quantity: item.quantity
       })
     );
 
@@ -80,9 +80,10 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
       items,
       bill: cart.bill,
       shippingAddress,
-      paymentType: constants.paymentType.online,
+      paymentType: constants.paymentType.online
     });
-    console.log(order, "order");
-    return { order, message: "Order payment successfully completed." };
+
+    await CartModel.deleteOne({ _id: cart._id });
+    return { order, message: 'Order payment successfully completed.' };
   }
 };

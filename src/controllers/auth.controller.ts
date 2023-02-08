@@ -1,6 +1,6 @@
-import { Response, Request } from "express";
-import * as services from "../services/auth.service";
-import { httpStatusCodes } from "../constants/response.constant";
+import { Response, Request } from 'express';
+import * as services from '../services/auth.service';
+import { httpStatusCodes } from '../constants/response.constant';
 
 export const otpGenerator = async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -23,7 +23,17 @@ export const updateUser = async (req: Request, res: Response) => {
   const data = req.body;
   const response = await services.updateUser({
     userId: req.user._id.toString(),
-    data,
+    data
   });
+  res.status(httpStatusCodes.OK).json(response);
+};
+
+export const logoutUser = async (req: Request, res: Response) => {
+  req.user.set(
+    'tokens',
+    req.user.tokens.filter(({ token }) => token !== req.token)
+  );
+  await req.user.save();
+  const response = { message: 'Successfully logged out.' };
   res.status(httpStatusCodes.OK).json(response);
 };
