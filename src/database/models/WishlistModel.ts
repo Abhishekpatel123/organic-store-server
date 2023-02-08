@@ -1,5 +1,5 @@
-import { Schema, model, Document, Types } from "mongoose";
-import config from "../../config";
+import { Schema, model, Document, Types } from 'mongoose';
+import config from '../../config';
 
 export interface WishlistItemInterface {
   itemId: string;
@@ -17,11 +17,10 @@ const wishlistSchema = new Schema<WishlistInterface>({
       itemId: {
         type: Schema.Types.ObjectId,
         ref: config.mongoConfig.collections.PRODUCTS,
-        unique: true,
-        required: true,
-      },
-    },
-  ],
+        required: true
+      }
+    }
+  ]
 });
 
 const WishlistModel = model<WishlistInterface>(
