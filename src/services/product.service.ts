@@ -60,7 +60,9 @@ export const searchProducts = async (keyword: string) => {
       { title: { $regex: keyword.trim() } },
       { description: { $regex: keyword.trim() } }
     ]
-  }).select('name title description imageUrl avgRating');
+  })
+    .populate('category')
+    .select('title imageUrl sku category');
   if (!products) throw BaseError.badRequest('Product not exist.');
 
   return { message: 'Products searched successfully.', products };
