@@ -1,7 +1,7 @@
-import { OrderModel } from "../database/models";
-import ProductModel from "../database/models/ProductModel";
-import RatingModel, { RatingInterface } from "../database/models/RatingModel";
-import BaseError from "../errors/base-error";
+import { OrderModel } from '../database/models';
+import ProductModel from '../database/models/ProductModel';
+import RatingModel, { RatingInterface } from '../database/models/RatingModel';
+import BaseError from '../errors/base-error';
 
 export const doRating = async (data: RatingInterface) => {
   const { userId, productId } = data;
@@ -12,9 +12,9 @@ export const doRating = async (data: RatingInterface) => {
     throw BaseError.notFound("Product not exist now you can't rate it.");
 
   // - you can only do rating if you have bought the product
-  const isOrdered = await OrderModel.findOne({
+  const isOrdered = await OrderModel.find({
     userId,
-    "items._id": productId,
+    'items._id': productId
   });
 
   if (!isOrdered)
@@ -24,7 +24,7 @@ export const doRating = async (data: RatingInterface) => {
 
   // only one rating for one user if he or she ordered product
   const alreadyRated = await RatingModel.findOne({ userId, productId });
-  if (alreadyRated) throw BaseError.badRequest("You rated already.");
+  if (alreadyRated) throw BaseError.badRequest('You rated already.');
 
   const rating = await RatingModel.create(data);
 
@@ -32,7 +32,7 @@ export const doRating = async (data: RatingInterface) => {
   product.ratingValue += data.ratingValue;
   product.avgRating = product.ratingValue / product.ratingCount;
   await product.save();
-  return { rating, product, message: "Successfully rated." };
+  return { rating, product, message: 'Successfully rated.' };
 };
 
 export const fetchRatingAndReview = async (data: { productId: string }) => {
@@ -43,5 +43,5 @@ export const fetchRatingAndReview = async (data: { productId: string }) => {
 
   const ratings = await RatingModel.find({ productId });
 
-  return { ratings, message: "Successfully fetched rating of this product." };
+  return { ratings, message: 'Successfully fetched rating of this product.' };
 };

@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express";
-import { ValidationError } from "joi";
-import BaseError from "../errors/base-error";
+import { NextFunction, Request, Response } from 'express';
+import { ValidationError } from 'joi';
+import BaseError from '../errors/base-error';
 
 const errorHandler = (
   err: Error,
@@ -8,18 +8,18 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(err, "------------------ err middleware");
+  console.log(err, '------------------ err middleware');
 
   // - If error is not operational error
   if (err instanceof BaseError && !err.isOperational) {
-    next(err);
+    return res.status(err.statusCode).send({ message: err.message });
   }
 
   // - If error is operational
   if (err instanceof ValidationError)
     return res
       .status(400)
-      .send({ type: "ValidationError", message: err.message });
+      .send({ type: 'ValidationError', message: err.message });
 
   if (err instanceof BaseError)
     return res.status(err.statusCode || 500).send(err.message);
