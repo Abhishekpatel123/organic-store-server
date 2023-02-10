@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { httpStatusCodes } from "../constants/response.constant";
-import * as service from "../services/rating.service";
+import { Request, Response } from 'express';
+import { httpStatusCodes } from '../constants/response.constant';
+import * as service from '../services/rating.service';
 
 export const doRating = async (req: Request, res: Response) => {
   const data = req.body;
@@ -10,7 +10,7 @@ export const doRating = async (req: Request, res: Response) => {
 };
 
 export const fetchRatingAndReview = async (req: Request, res: Response) => {
-  const data = { userId: req.user._id, productId: req.params.productId };
+  const data = { productId: req.params.productId };
   const response = await service.fetchRatingAndReview(data);
   res.status(httpStatusCodes.OK).send(response);
 };
