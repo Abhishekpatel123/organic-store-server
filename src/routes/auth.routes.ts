@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { roles } from '../constants';
 import * as controller from '../controllers/auth.controller';
 import { authenticate, tryCatch } from '../middleware';
 
@@ -21,17 +22,25 @@ router.post(
 );
 
 // get user details
-router.get('/', authenticate, tryCatch(controller.getUser));
+router.get(
+  '/',
+  authenticate([roles.customer, roles.admin, roles.seller]),
+  tryCatch(controller.getUser)
+);
 
 // - UPDATE USER
 router.patch(
   '/',
-  authenticate,
+  authenticate([roles.customer, roles.seller]),
   validation.updateUser,
   tryCatch(controller.updateUser)
 );
 
 // - LOGOUT
-router.get('/logout', authenticate, tryCatch(controller.logoutUser));
+router.get(
+  '/logout',
+  authenticate([roles.customer, roles.admin, roles.seller]),
+  tryCatch(controller.logoutUser)
+);
 
 export default router;

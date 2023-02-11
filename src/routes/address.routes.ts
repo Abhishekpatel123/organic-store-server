@@ -1,41 +1,46 @@
-import * as express from "express";
-import * as controller from "../controllers/address.controller";
-import { authenticate, tryCatch } from "../middleware";
+import * as express from 'express';
+import { roles } from '../constants';
+import * as controller from '../controllers/address.controller';
+import { authenticate, tryCatch } from '../middleware';
 
-import * as validation from "../validations/address.validation";
+import * as validation from '../validations/address.validation';
 
 const router = express.Router();
 
 // - Add Address
 router.post(
-  "/",
-  authenticate,
+  '/',
+  authenticate([roles.customer, roles.admin]),
   validation.address,
   tryCatch(controller.addAddress)
 );
 
 // - Make This Address to Shipping Address
 router.post(
-  "/shipping/:addressId",
-  authenticate,
+  '/shipping/:addressId',
+  authenticate([roles.customer, roles.admin]),
   tryCatch(controller.makeShippingAddress)
 );
 
 // - Fetch Address
-router.get("/", authenticate, tryCatch(controller.getAddresses));
+router.get(
+  '/',
+  authenticate([roles.customer, roles.admin]),
+  tryCatch(controller.getAddresses)
+);
 
 // - Update Address
 router.patch(
-  "/",
-  authenticate,
+  '/',
+  authenticate([roles.customer, roles.admin]),
   validation.updateAddress,
   tryCatch(controller.updateAddress)
 );
 
 // - Remove Address
 router.delete(
-  "/",
-  authenticate,
+  '/',
+  authenticate([roles.customer, roles.admin]),
   validation.removeAddress,
   tryCatch(controller.deleteAddress)
 );

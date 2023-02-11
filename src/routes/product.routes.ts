@@ -1,18 +1,23 @@
 import * as express from 'express';
 import * as validation from '../validations/product.validation';
 import * as controllers from '../controllers/product.controller';
-import { tryCatch } from '../middleware';
+import { authenticate, tryCatch } from '../middleware';
+import { roles } from '../constants';
 
 const router = express.Router();
 
-// - Admin Authorization will do later
-
 // - Create Product
-router.post('/', validation.createProduct, tryCatch(controllers.createProduct));
+router.post(
+  '/',
+  authenticate([roles.admin, roles.seller]),
+  validation.createProduct,
+  tryCatch(controllers.createProduct)
+);
 
 // - Delete Product
 router.delete(
   '/',
+  authenticate([roles.admin, roles.seller]),
   validation.removeProduct,
   tryCatch(controllers.removeProduct)
 );

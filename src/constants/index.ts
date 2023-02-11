@@ -1,14 +1,25 @@
-import { httpStatusCodes } from "./response.constant";
+import { httpStatusCodes } from './response.constant';
 
 const status = {
-  pending: "PENDING",
-  success: "SUCCESS",
-  failed: "FAILED",
+  pending: 'PENDING',
+  success: 'SUCCESS',
+  failed: 'FAILED'
 };
 
 const paymentType = {
-  cod: "Cash On Delivery",
-  online: "Online",
+  cod: 'Cash On Delivery',
+  online: 'Online'
+};
+
+export const roles = {
+  admin: 'ADMIN',
+  customer: 'CUSTOMER',
+  seller: 'SELLER'
+};
+
+export const errorMsg = {
+  unAuthorized: 'You are not authorized to access this route.',
+  userNotFound: 'User not found or Access token has expired'
 };
 
 export default {
@@ -16,11 +27,12 @@ export default {
   httpStatusCodes,
   minForFreeDelivery: 1000,
   deliveryCharges: 40,
-  deliveryFree: "FREE",
+  deliveryFree: 'FREE',
   currencies: {
-    RUPEE: "INR",
-    DOLLAR: "USD",
+    RUPEE: 'INR',
+    DOLLAR: 'USD'
   },
   status,
   paymentType,
+  roles
 };

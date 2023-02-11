@@ -3,13 +3,14 @@ import { authenticate, tryCatch } from '../middleware';
 
 import * as controllers from '../controllers/rating.controller';
 import * as validations from '../validations/rating.validation';
+import { roles } from '../constants';
 
 const router = Router();
 
 // - Do rating
 router.post(
   '/',
-  authenticate,
+  authenticate([roles.customer]),
   validations.doRating,
   tryCatch(controllers.doRating)
 );

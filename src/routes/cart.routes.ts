@@ -1,34 +1,47 @@
-import * as express from "express";
-import * as validation from "../validations/cart.validation";
-import * as controllers from "../controllers/cart.controller";
+import * as express from 'express';
+import * as validation from '../validations/cart.validation';
+import * as controllers from '../controllers/cart.controller';
 
-import { authenticate, tryCatch } from "../middleware";
+import { authenticate, tryCatch } from '../middleware';
+import { roles } from '../constants';
 
 const router = express.Router();
 
 // - Get cart details
-router.get("/", authenticate, tryCatch(controllers.fetchCart));
+router.get(
+  '/',
+  authenticate([roles.customer]),
+  tryCatch(controllers.fetchCart)
+);
 
 // - billing
-router.get("/bill", authenticate, tryCatch(controllers.getBilling));
+router.get(
+  '/bill',
+  authenticate([roles.customer]),
+  tryCatch(controllers.getBilling)
+);
 
 // - Add product or item into cart
 router.post(
-  "/items",
-  authenticate,
+  '/items',
+  authenticate([roles.customer]),
   validation.addItemIntoCart,
   tryCatch(controllers.addItemIntoCart)
 );
 
 // - Remove item from cart
 router.delete(
-  "/items",
-  authenticate,
+  '/items',
+  authenticate([roles.customer]),
   validation.removeCartItem,
   tryCatch(controllers.removeCartItem)
 );
 
 // - FETCH ITEM BY ITEM ID
-router.get("/items/:itemId", authenticate, tryCatch(controllers.fetchItem));
+router.get(
+  '/items/:itemId',
+  authenticate([roles.customer]),
+  tryCatch(controllers.fetchItem)
+);
 
 export default router;
