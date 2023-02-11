@@ -1,5 +1,6 @@
 import { Schema, model, Document, Types } from 'mongoose';
 import config from '../../config';
+import constants from '../../constants';
 
 interface TokenInterface {
   token: string;
@@ -29,6 +30,7 @@ export interface UserInterface extends Document {
   verify: boolean;
   addresses: Types.Array<AddressInterface>;
   shippingAddressId: string;
+  roles: Types.Array<string>;
   tokens: Types.Array<TokenInterface>;
 }
 
@@ -56,6 +58,7 @@ const userSchema = new Schema<UserInterface>(
       }
     ],
     shippingAddressId: String,
+    roles: [{ type: String, default: [constants.roles.customer] }],
     tokens: [{ token: String }]
   },
   {
