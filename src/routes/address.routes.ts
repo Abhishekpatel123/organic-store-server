@@ -39,9 +39,8 @@ router.patch(
 
 // - Remove Address
 router.delete(
-  '/',
+  '/:id',
   authenticate([roles.customer, roles.admin]),
-  validation.removeAddress,
   tryCatch(controller.deleteAddress)
 );
 

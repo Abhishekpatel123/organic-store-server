@@ -30,10 +30,10 @@ export const updateAddress = async (req: Request, res: Response) => {
 };
 
 export const deleteAddress = async (req: Request, res: Response) => {
-  const { _id } = req.body;
+  const id = req.params.id;
   const response = await services.deleteAddress({
     userId: req.user._id.toString(),
-    addressId: _id,
+    addressId: id,
     currentShippingAddressId: req.user.shippingAddressId
   });
   res.status(httpStatusCodes.OK).send(response);
