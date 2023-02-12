@@ -51,9 +51,9 @@ export const fetchWishlist = async (userId: UserInterface['_id']) => {
   return { wishlist, message: 'Cart fetched successfully.' };
 };
 
-export const removeWishlistItem = async (
+export const deleteWishlistItem = async (
   userId: UserInterface['_id'],
-  itemId: ProductInterface['_id']
+  itemId: string
 ) => {
   const wishlist = await WishlistModel.findOne({ userId });
   if (!wishlist)

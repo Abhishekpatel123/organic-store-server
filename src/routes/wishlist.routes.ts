@@ -24,10 +24,9 @@ router.post(
 
 // - Remove item from Wishlist
 router.delete(
-  '/delete',
+  '/:id',
   authenticate([roles.customer]),
-  validation.removeWishlistItem,
-  tryCatch(controllers.removeWishlistItem)
+  tryCatch(controllers.deleteWishlistItem)
 );
 
 export default router;

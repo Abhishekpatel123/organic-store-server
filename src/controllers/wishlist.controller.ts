@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { httpStatusCodes } from "../constants/response.constant";
-import * as services from "../services/wishlist.service";
+import { Request, Response } from 'express';
+import { httpStatusCodes } from '../constants/response.constant';
+import * as services from '../services/wishlist.service';
 
 export const addItemIntoWishlist = async (req: Request, res: Response) => {
   const userId = req.user._id;
@@ -16,9 +16,9 @@ export const fetchWishlist = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.OK).json(response);
 };
 
-export const removeWishlistItem = async (req: Request, res: Response) => {
-  const { itemId } = req.body;
+export const deleteWishlistItem = async (req: Request, res: Response) => {
+  const itemId = req.params.id;
   const userId = req.user._id;
-  const response = await services.removeWishlistItem(userId, itemId);
+  const response = await services.deleteWishlistItem(userId, itemId);
   res.status(httpStatusCodes.OK).json(response);
 };
