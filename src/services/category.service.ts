@@ -1,40 +1,70 @@
-import { v4 as uuidv4 } from "uuid";
-import { CategoryModel } from "../database/models";
-import { CategoryInterface } from "../database/models/CategoryModel";
-import BaseError from "../errors/base-error";
+import { v4 as uuidv4 } from 'uuid';
+import { CategoryModel } from '../database/models';
+import { CategoryInterface } from '../database/models/CategoryModel';
+import BaseError from '../errors/base-error';
+import { ImageType } from '../types';
 
-import * as utils from "../utils";
+import * as utils from '../utils';
 
 export const createCategory = async ({
   name,
-  file,
+  file
 }: {
-  name: CategoryInterface["name"];
-  file: any;
+  name: CategoryInterface['name'];
+  file: ImageType;
 }) => {
-  if (file) {
-    const isAlreadyExist = await CategoryModel.findOne({ name });
-    if (isAlreadyExist) {
-      throw BaseError.badRequest("Same name category already exists");
-    }
-    const fileUrl = await utils.uploadFile(file.path, `category-${uuidv4()}`);
-    const category = await CategoryModel.create({
-      name,
-      imageUrl: fileUrl,
-    });
-    return { category, message: "Category updated successfully." };
+  const isAlreadyExist = await CategoryModel.findOne({ name });
+  if (isAlreadyExist) {
+    throw BaseError.badRequest('Same name category already exists');
   }
+  const fileUrl = await utils.uploadFile(file.path, `category-${uuidv4()}`);
+  const category = await CategoryModel.create({
+    name,
+    imageUrl: fileUrl
+  });
+  return { category, message: 'Category created successfully.' };
+};
+
+export const updateCategory = async ({
+  data,
+  file
+}: {
+  data: {
+    name?: CategoryInterface['name'];
+    categoryId: CategoryInterface['_id'];
+  };
+  file?: ImageType;
+}) => {
+  let image: { imageUrl?: string } = {};
+
+  if (file) {
+    const imageUrl = (await utils.uploadFile(
+      file.path,
+      `category-${uuidv4()}`
+    )) as string;
+    image.imageUrl = imageUrl;
+  }
+
+  const category = await CategoryModel.findByIdAndUpdate(
+    data.categoryId,
+    {
+      ...data,
+      ...image
+    },
+    { new: true }
+  );
+  return { category, message: 'Category updated successfully.' };
 };
 
 export const fetchCategories = async () => {
   const categories = await CategoryModel.find({});
-  return { categories, message: "Categories fetched successfully." };
+  return { categories, message: 'Categories fetched successfully.' };
 };
 
-export const removeCategory = async (id: CategoryInterface["_id"]) => {
+export const removeCategory = async (id: CategoryInterface['_id']) => {
   const category = await CategoryModel.findOne({ _id: id });
-  if (!category) throw BaseError.badRequest("Category not exist.");
+  if (!category) throw BaseError.badRequest('Category not exist.');
 
   await CategoryModel.findByIdAndDelete(id);
-  return { message: "Categories removed successfully." };
+  return { message: 'Categories removed successfully.' };
 };

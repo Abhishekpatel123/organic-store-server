@@ -35,7 +35,7 @@ const authenticate =
 
         req.token = token;
         req.user = user;
-        console.log('- AUTHORIZATION DONE', user);
+        console.log('- AUTHORIZATION DONE');
 
         if (roles.includes(user.role)) next();
         else return next(BaseError.unAuthorized(errorMsg.unAuthorized));

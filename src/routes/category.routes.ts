@@ -8,19 +8,28 @@ const router = express.Router();
 
 // - Add Category
 router.post(
-  '/create',
+  '/',
   authenticate([roles.admin]),
   upload.single('image'),
   categoryValidation.crateCategory,
   tryCatch(categoryControllers.createCategory)
 );
 
+// - Update Category
+router.patch(
+  '/',
+  authenticate([roles.admin]),
+  upload.single('image'),
+  categoryValidation.updateCategory,
+  tryCatch(categoryControllers.updateCategory)
+);
+
 // - Fetch Categories
-router.get('/get', tryCatch(categoryControllers.fetchCategories));
+router.get('/', tryCatch(categoryControllers.fetchCategories));
 
 // - Delete Category
 router.delete(
-  '/delete',
+  '/',
   authenticate([roles.admin]),
   categoryValidation.removeCategory,
   tryCatch(categoryControllers.removeCategory)
