@@ -85,7 +85,7 @@ export const addItemIntoCart = async (
   };
 };
 
-export const removeCartItem = async (
+export const deleteCartItem = async (
   userId: UserInterface['_id'],
   itemId: ProductInterface['_id']
 ) => {

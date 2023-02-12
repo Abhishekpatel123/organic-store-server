@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { httpStatusCodes } from "../constants/response.constant";
-import * as services from "../services/cart.service";
+import { Request, Response } from 'express';
+import { httpStatusCodes } from '../constants/response.constant';
+import * as services from '../services/cart.service';
 
 export const addItemIntoCart = async (req: Request, res: Response) => {
   const userId = req.user._id;
@@ -22,10 +22,10 @@ export const getBilling = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.OK).json(response);
 };
 
-export const removeCartItem = async (req: Request, res: Response) => {
-  const { itemId } = req.body;
+export const deleteCartItem = async (req: Request, res: Response) => {
+  const itemId = req.body.id;
   const userId = req.user._id;
-  const response = await services.removeCartItem(userId, itemId);
+  const response = await services.deleteCartItem(userId, itemId);
   res.status(httpStatusCodes.OK).json(response);
 };
 
@@ -33,7 +33,7 @@ export const fetchItem = async (req: Request, res: Response) => {
   const { itemId } = req.params;
   const response = await services.fetchItemById({
     itemId,
-    userId: req.user._id.toString(),
+    userId: req.user._id.toString()
   });
   res.status(httpStatusCodes.OK).json(response);
 };

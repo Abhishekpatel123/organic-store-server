@@ -31,10 +31,9 @@ router.post(
 
 // - Remove item from cart
 router.delete(
-  '/items',
+  '/items/:id',
   authenticate([roles.customer]),
-  validation.removeCartItem,
-  tryCatch(controllers.removeCartItem)
+  tryCatch(controllers.deleteCartItem)
 );
 
 // - FETCH ITEM BY ITEM ID
