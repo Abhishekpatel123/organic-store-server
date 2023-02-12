@@ -16,7 +16,7 @@ router.get(
 
 // - Add product or item into Wishlist
 router.post(
-  '/add',
+  '/',
   authenticate([roles.customer]),
   validation.addItemIntoWishlist,
   tryCatch(controllers.addItemIntoWishlist)
