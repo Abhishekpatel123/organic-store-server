@@ -8,12 +8,24 @@ export const createProduct = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.CREATED).json(response);
 };
 
+export const updateProduct = async (req: Request, res: Response) => {
+  const response = await services.updateProduct(req.body);
+  res.status(httpStatusCodes.CREATED).json(response);
+};
+
 export const uploadProductImages = async (req: Request, res: Response) => {
   const images = req.files as ImageType[];
   const productId = req.body.productId;
   const response = await services.uploadProductImages({ productId, images });
   res.status(httpStatusCodes.CREATED).json(response);
 };
+
+// export const updateProductImages = async (req: Request, res: Response) => {
+//   const images = req.files as ImageType[];
+//   const productId = req.body.productId;
+//   const response = await services.updateProductImages({ productId, images });
+//   res.status(httpStatusCodes.CREATED).json(response);
+// };
 
 export const fetchProducts = async (req: Request, res: Response) => {
   const categoryName = req.params.categoryName;
@@ -41,6 +53,12 @@ export const latestProduct = async (req: Request, res: Response) => {
 export const removeProduct = async (req: Request, res: Response) => {
   const { id } = req.body;
   const response = await services.removeProduct(id);
+  res.status(httpStatusCodes.OK).json(response);
+};
+
+export const deleteProductImage = async (req: Request, res: Response) => {
+  const { productId, imageId } = req.body;
+  const response = await services.deleteProductImage({ productId, imageId });
   res.status(httpStatusCodes.OK).json(response);
 };
 

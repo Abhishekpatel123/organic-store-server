@@ -18,7 +18,11 @@ export interface ProductInterface {
   ratingValue: number;
   manufacture_details: any;
   pricing: PricingInterface;
-  images: Types.Array<string>;
+  images: {
+    _id: Types.ObjectId;
+    imageUrl: string;
+    public_id: string;
+  }[];
   countInStock: number;
   category: any;
 }
@@ -47,7 +51,12 @@ const productSchema = new Schema<ProductInterface & Document>(
       discount: Number
     },
     countInStock: { type: Number, required: true },
-    images: [{ type: String }]
+    images: [
+      {
+        imageUrl: { type: String, required: true },
+        public_id: { type: String, required: true }
+      }
+    ]
     // rating comment will include latter
     // offer will include later version
   },

@@ -41,7 +41,7 @@ export interface OrderItemInterface {
   ratingValue: number;
   manufacture_details: any;
   pricing: PricingInterface;
-  images: string[];
+  images: { imageUrl: string; public_id: string }[];
   category: any;
   // };
   quantity: number;
@@ -76,7 +76,12 @@ const orderSchema = new Schema<OrderInterface>(
           currency: String,
           discount: Number
         },
-        images: [{ type: String }],
+        images: [
+          {
+            imageUrl: { type: String, required: true },
+            public_id: { type: String, required: true }
+          }
+        ],
         // },
         quantity: { type: Number, required: true }
       }

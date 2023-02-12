@@ -23,12 +23,37 @@ router.post(
   tryCatch(controllers.uploadProductImages)
 );
 
+// - Update Product
+router.patch(
+  '/',
+  authenticate([roles.admin, roles.seller]),
+  validation.updateProduct,
+  tryCatch(controllers.updateProduct)
+);
+
+// - Update Product Images
+// router.patch(
+//   '/images',
+//   authenticate([roles.admin, roles.seller]),
+//   upload.array('images', 4),
+//   validation.uploadProductImages,
+//   tryCatch(controllers.updateProductImages)
+// );
+
 // - Delete Product
 router.delete(
   '/',
   authenticate([roles.admin, roles.seller]),
   validation.removeProduct,
   tryCatch(controllers.removeProduct)
+);
+
+// - Delete Product Image
+router.delete(
+  '/images',
+  authenticate([roles.admin, roles.seller]),
+  validation.deleteProductImage,
+  tryCatch(controllers.deleteProductImage)
 );
 
 // - Read Product bu category

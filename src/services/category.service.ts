@@ -3,8 +3,7 @@ import { CategoryModel } from '../database/models';
 import { CategoryInterface } from '../database/models/CategoryModel';
 import BaseError from '../errors/base-error';
 import { ImageType } from '../types';
-
-import * as utils from '../utils';
+import { uploadFile } from '../utils/upload-file.utils';
 
 export const createCategory = async ({
   name,
@@ -17,7 +16,7 @@ export const createCategory = async ({
   if (isAlreadyExist) {
     throw BaseError.badRequest('Same name category already exists');
   }
-  const fileUrl = await utils.uploadFile(file.path, `category-${uuidv4()}`);
+  const fileUrl = await uploadFile(file.path, `category-${uuidv4()}`);
   const category = await CategoryModel.create({
     name,
     imageUrl: fileUrl
@@ -38,7 +37,7 @@ export const updateCategory = async ({
   let image: { imageUrl?: string } = {};
 
   if (file) {
-    const imageUrl = (await utils.uploadFile(
+    const imageUrl = (await uploadFile(
       file.path,
       `category-${uuidv4()}`
     )) as string;
@@ -53,6 +52,8 @@ export const updateCategory = async ({
     },
     { new: true }
   );
+  if (!category) throw BaseError.badRequest('Product not found.');
+
   return { category, message: 'Category updated successfully.' };
 };
 

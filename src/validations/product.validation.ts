@@ -69,6 +69,25 @@ export const updateProduct = (
 };
 
 // - Update Product
+export const deleteProductImage = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const data = req.body;
+
+  const schema = Joi.object({
+    productId: Joi.string().required(),
+    imageId: Joi.string().required()
+  });
+
+  const { error } = schema.validate(data);
+  if (error) return res.status(400).send(error.message);
+  console.log('- Validation Done');
+  next();
+};
+
+// - Update Product
 export const removeProduct = (
   req: Request,
   res: Response,
