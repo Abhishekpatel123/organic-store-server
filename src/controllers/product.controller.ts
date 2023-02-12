@@ -50,9 +50,9 @@ export const latestProduct = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.OK).json(response);
 };
 
-export const removeProduct = async (req: Request, res: Response) => {
-  const { id } = req.body;
-  const response = await services.removeProduct(id);
+export const deleteProduct = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const response = await services.deleteProduct(id);
   res.status(httpStatusCodes.OK).json(response);
 };
 

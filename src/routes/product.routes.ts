@@ -42,10 +42,9 @@ router.patch(
 
 // - Delete Product
 router.delete(
-  '/',
+  '/:id',
   authenticate([roles.admin, roles.seller]),
-  validation.removeProduct,
-  tryCatch(controllers.removeProduct)
+  tryCatch(controllers.deleteProduct)
 );
 
 // - Delete Product Image

@@ -98,7 +98,7 @@ export const latestProduct = async ({ limit = 10 }: { limit?: number }) => {
   return { product, message: 'Product fetched successfully.' };
 };
 
-export const removeProduct = async (id: ProductInterface['_id']) => {
+export const deleteProduct = async (id: string) => {
   const product = await ProductModel.findOne({ _id: id });
   if (!product) throw BaseError.badRequest('Product not exist.');
   // non blocking while deleting images form cloud

@@ -87,22 +87,6 @@ export const deleteProductImage = (
   next();
 };
 
-// - Update Product
-export const removeProduct = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const data = req.body;
-
-  const schema = Joi.object({ id: Joi.string().required() });
-
-  const { error } = schema.validate(data);
-  if (error) return res.status(400).send(error.message);
-  console.log('- Validation Done');
-  next();
-};
-
 // - Fetch Products by category
 // - Fetch single Product
 // params does not need validation
