@@ -100,7 +100,15 @@ const orderSchema = new Schema<OrderInterface>(
       addressType: { type: String, required: true }
     }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.__v;
+        return ret;
+      }
+    }
+  }
 );
 
 const OrderModel = model<OrderInterface & Document>(

@@ -1,5 +1,5 @@
-import { Schema, model, Document } from "mongoose";
-import config from "../../config";
+import { Schema, model, Document } from 'mongoose';
+import config from '../../config';
 
 export interface RatingInterface {
   title: string;
@@ -15,11 +15,19 @@ const ratingSchema = new Schema<RatingInterface & Document>(
     title: { type: String, required: true },
     description: { type: String, required: true },
     ratingValue: { type: Number, required: true },
-    userName: { type: String, default: "Organic Store Customer" },
+    userName: { type: String, default: 'Organic Store Customer' },
     productId: { type: String, required: true },
-    userId: { type: String, required: true },
+    userId: { type: String, required: true }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.__v;
+        return ret;
+      }
+    }
+  }
 );
 
 const RatingModel = model<RatingInterface>(

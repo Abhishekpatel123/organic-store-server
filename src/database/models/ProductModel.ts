@@ -60,7 +60,15 @@ const productSchema = new Schema<ProductInterface & Document>(
     // rating comment will include latter
     // offer will include later version
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.__v;
+        return ret;
+      }
+    }
+  }
 );
 
 const ProductModel = model<ProductInterface & Document>(

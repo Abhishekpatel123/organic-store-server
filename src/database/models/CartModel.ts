@@ -20,23 +20,34 @@ export interface CartInterface extends Document {
   bill: number;
 }
 
-const cartSchema = new Schema<CartInterface>({
-  userId: { type: String, unique: true, required: true },
-  items: [
-    {
-      itemId: {
-        type: Schema.Types.ObjectId,
-        ref: config.mongoConfig.collections.PRODUCTS,
-        required: true
-      },
-      // same price which is of product
-      basePrice: { type: Number, required: true },
-      // no of product of same
-      quantity: { type: Number, required: true }
+const cartSchema = new Schema<CartInterface>(
+  {
+    userId: { type: String, unique: true, required: true },
+    items: [
+      {
+        itemId: {
+          type: Schema.Types.ObjectId,
+          ref: config.mongoConfig.collections.PRODUCTS,
+          required: true
+        },
+        // same price which is of product
+        basePrice: { type: Number, required: true },
+        // no of product of same
+        quantity: { type: Number, required: true }
+      }
+    ],
+    bill: { type: Number, required: true, default: 0 }
+  },
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.__v;
+        return ret;
+      }
     }
-  ],
-  bill: { type: Number, required: true, default: 0 }
-});
+  }
+);
 
 const CartModel = model<CartInterface>(
   config.mongoConfig.collections.CARTS,
