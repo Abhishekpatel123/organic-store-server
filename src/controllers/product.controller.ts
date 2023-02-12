@@ -1,9 +1,17 @@
 import { Request, Response } from 'express';
 import { httpStatusCodes } from '../constants/response.constant';
 import * as services from '../services/product.service';
+import { ImageType } from '../types';
 
 export const createProduct = async (req: Request, res: Response) => {
   const response = await services.createProduct(req.body);
+  res.status(httpStatusCodes.CREATED).json(response);
+};
+
+export const uploadProductImages = async (req: Request, res: Response) => {
+  const images = req.files as ImageType[];
+  const productId = req.body.productId;
+  const response = await services.uploadProductImages({ productId, images });
   res.status(httpStatusCodes.CREATED).json(response);
 };
 

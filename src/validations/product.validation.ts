@@ -11,8 +11,6 @@ const productCommonSchema = Joi.object({
     currency: Joi.string().required(),
     discount: Joi.number().required()
   }).required(),
-  imageUrl: Joi.string(),
-  images: Joi.array(),
   countInStock: Joi.number().required(),
   category: Joi.string().required()
 });
@@ -27,7 +25,25 @@ export const createProduct = (
   const schema = productCommonSchema;
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return res.status(400).send(error.message);
+  console.log('- Validation Done');
+  next();
+};
+
+// - Upload product images
+export const uploadProductImages = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const images = req.files;
+  const productId = req.body.productId;
+  const schema = Joi.object({
+    productId: Joi.string().required(),
+    images: Joi.array().min(1).max(4).required()
+  });
+  const { error } = schema.validate({ images, productId });
+  if (error) return res.status(400).send(error.message);
   console.log('- Validation Done');
   next();
 };
@@ -47,7 +63,7 @@ export const updateProduct = (
   );
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return res.status(400).send(error.message);
   console.log('- Validation Done');
   next();
 };
@@ -63,7 +79,7 @@ export const removeProduct = (
   const schema = Joi.object({ id: Joi.string().required() });
 
   const { error } = schema.validate(data);
-  if (error) return res.status(404).send(error.message);
+  if (error) return res.status(400).send(error.message);
   console.log('- Validation Done');
   next();
 };

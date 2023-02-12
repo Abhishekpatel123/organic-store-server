@@ -65,7 +65,7 @@ export const handlePaymentIntentSucceeded = async (paymentIntent: any) => {
         ratingValue: item.itemId.ratingValue,
         manufacture_details: item.itemId.manufacture_details,
         pricing: item.itemId.pricing,
-        imageUrl: item.itemId.imageUrl,
+        images: item.itemId.images,
         category: item.itemId.category,
         quantity: item.quantity
       })

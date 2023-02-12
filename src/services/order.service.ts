@@ -107,7 +107,7 @@ export const buyItemFromCart = async ({ user }: { user: UserInterface }) => {
       ratingValue: item.itemId.ratingValue,
       manufacture_details: item.itemId.manufacture_details,
       pricing: item.itemId.pricing,
-      imageUrl: item.itemId.imageUrl,
+      images: item.itemId.images,
       category: item.itemId.category,
       quantity: item.quantity
     })
@@ -146,7 +146,7 @@ export const buyItemFromCartCOD = async ({ user }: { user: UserInterface }) => {
       ratingValue: item.itemId.ratingValue,
       manufacture_details: item.itemId.manufacture_details,
       pricing: item.itemId.pricing,
-      imageUrl: item.itemId.imageUrl,
+      images: item.itemId.images,
       category: item.itemId.category,
       quantity: item.quantity
     })

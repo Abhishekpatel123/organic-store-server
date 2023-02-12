@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as validation from '../validations/product.validation';
 import * as controllers from '../controllers/product.controller';
-import { authenticate, tryCatch } from '../middleware';
+import { authenticate, tryCatch, upload } from '../middleware';
 import { roles } from '../constants';
 
 const router = express.Router();
@@ -12,6 +12,15 @@ router.post(
   authenticate([roles.admin, roles.seller]),
   validation.createProduct,
   tryCatch(controllers.createProduct)
+);
+
+// - Upload Product Image
+router.post(
+  '/images',
+  authenticate([roles.admin, roles.seller]),
+  upload.array('images', 4),
+  validation.uploadProductImages,
+  tryCatch(controllers.uploadProductImages)
 );
 
 // - Delete Product

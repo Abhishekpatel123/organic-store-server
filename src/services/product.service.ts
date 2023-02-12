@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { CategoryModel, ProductModel } from '../database/models';
 import { ProductInterface } from '../database/models/ProductModel';
 import BaseError from '../errors/base-error';
+import { ImageType } from '../types';
+import * as utils from '../utils';
 
 export const createProduct = async (data: ProductInterface) => {
   const sku = `${data.category}-${uuidv4()}`;
@@ -13,6 +15,22 @@ export const createProduct = async (data: ProductInterface) => {
     category: category?._id
   });
   return { product, message: 'Product updated successfully.' };
+};
+
+export const uploadProductImages = async ({
+  productId,
+  images
+}: {
+  productId: string;
+  images: ImageType[];
+}) => {
+  const responses = await Promise.all(
+    images.map((image) => utils.uploadFile(image.path, `product-${uuidv4()}`))
+  );
+  await ProductModel.findByIdAndUpdate(productId, {
+    $set: { images: responses }
+  });
+  return { message: 'Successfully saved the images.' };
 };
 
 export const fetchProducts = async (categoryName: string) => {
@@ -62,7 +80,7 @@ export const searchProducts = async (keyword: string) => {
     ]
   })
     .populate('category')
-    .select('title imageUrl sku category');
+    .select('title images sku category');
   if (!products) throw BaseError.badRequest('Product not exist.');
 
   return { message: 'Products searched successfully.', products };
