@@ -28,6 +28,12 @@ export const updateUser = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.OK).json(response);
 };
 
+export const deleteUser = async (req: Request, res: Response) => {
+  req.user.delete();
+  const response = { message: 'User deleted successfully.' };
+  res.status(httpStatusCodes.OK).json(response);
+};
+
 export const logoutUser = async (req: Request, res: Response) => {
   req.user.set(
     'tokens',
