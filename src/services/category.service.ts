@@ -62,7 +62,7 @@ export const fetchCategories = async () => {
   return { categories, message: 'Categories fetched successfully.' };
 };
 
-export const removeCategory = async (id: CategoryInterface['_id']) => {
+export const deleteCategory = async (id: CategoryInterface['_id']) => {
   const category = await CategoryModel.findOne({ _id: id });
   if (!category) throw BaseError.badRequest('Category not exist.');
 

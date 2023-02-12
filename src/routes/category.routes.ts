@@ -29,10 +29,9 @@ router.get('/', tryCatch(categoryControllers.fetchCategories));
 
 // - Delete Category
 router.delete(
-  '/',
+  '/:id',
   authenticate([roles.admin]),
-  categoryValidation.removeCategory,
-  tryCatch(categoryControllers.removeCategory)
+  tryCatch(categoryControllers.deleteCategory)
 );
 
 export default router;

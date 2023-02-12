@@ -33,8 +33,8 @@ export const fetchCategories = async (req: Request, res: Response) => {
   res.status(httpStatusCodes.OK).json(response);
 };
 
-export const removeCategory = async (req: Request, res: Response) => {
-  const { id } = req.body;
-  const response = await services.removeCategory(id);
+export const deleteCategory = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const response = await services.deleteCategory(id);
   res.status(httpStatusCodes.OK).json(response);
 };
