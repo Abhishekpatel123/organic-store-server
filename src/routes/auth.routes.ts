@@ -36,6 +36,13 @@ router.patch(
   tryCatch(controller.updateUser)
 );
 
+// - DELETE USER
+router.delete(
+  '/',
+  authenticate([roles.admin]),
+  tryCatch(controller.deleteUser)
+);
+
 // - LOGOUT
 router.get(
   '/logout',
