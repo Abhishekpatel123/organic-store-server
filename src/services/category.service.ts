@@ -19,7 +19,7 @@ export const createCategory = async ({
   const fileUrl = await uploadFile(file.path, `category-${uuidv4()}`);
   const category = await CategoryModel.create({
     name,
-    imageUrl: fileUrl
+    image: fileUrl
   });
   return { category, message: 'Category created successfully.' };
 };

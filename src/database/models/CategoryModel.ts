@@ -3,13 +3,16 @@ import config from '../../config';
 
 export interface CategoryInterface extends Document {
   name: string;
-  imageUrl: string;
+  image: string;
 }
 
 const categorySchema = new Schema<CategoryInterface>(
   {
     name: { type: String, unique: true, required: true },
-    imageUrl: String
+    image: {
+      imageUrl: { type: String, required: true },
+      public_id: { type: String, required: true }
+    }
   },
   {
     timestamps: true,
