@@ -34,22 +34,21 @@ export const updateCategory = async ({
   };
   file?: ImageType;
 }) => {
-  let image: { imageUrl?: string } = {};
+  let updateData = JSON.parse(JSON.stringify(data));
 
   if (file) {
-    const imageUrl = (await uploadFile(
+    updateData.image = (await uploadFile(
       file.path,
       `category-${uuidv4()}`
-    )) as string;
-    image.imageUrl = imageUrl;
+    )) as {
+      imageUrl: string;
+      public_id: string;
+    };
   }
 
   const category = await CategoryModel.findByIdAndUpdate(
     data.categoryId,
-    {
-      ...data,
-      ...image
-    },
+    updateData,
     { new: true }
   );
   if (!category) throw BaseError.badRequest('Product not found.');
