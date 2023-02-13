@@ -3,7 +3,7 @@ import { CategoryModel } from '../database/models';
 import { CategoryInterface } from '../database/models/CategoryModel';
 import BaseError from '../errors/base-error';
 import { ImageType } from '../types';
-import { uploadFile } from '../utils/upload-file.utils';
+import { deleteFile, uploadFile } from '../utils/upload-file.utils';
 
 export const createCategory = async ({
   name,
@@ -64,7 +64,7 @@ export const fetchCategories = async () => {
 export const deleteCategory = async (id: CategoryInterface['_id']) => {
   const category = await CategoryModel.findOne({ _id: id });
   if (!category) throw BaseError.badRequest('Category not exist.');
-
+  deleteFile(category.image.public_id);
   await CategoryModel.findByIdAndDelete(id);
   return { message: 'Categories removed successfully.' };
 };

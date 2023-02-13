@@ -3,7 +3,10 @@ import config from '../../config';
 
 export interface CategoryInterface extends Document {
   name: string;
-  image: string;
+  image: {
+    imageUrl: string;
+    public_id: string;
+  };
 }
 
 const categorySchema = new Schema<CategoryInterface>(
